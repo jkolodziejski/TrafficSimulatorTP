@@ -6,6 +6,16 @@ import java.util.List;
 import org.json.JSONObject;
 
 public class Vehicle extends SimulatedObject {
+	
+	private List<Junction> itinerary = new ArrayList<Junction>();
+	
+	private VehicleStatus status;
+	
+	private int maximumSpeed, currentSpeed, location,contClass,totalTraveledDistance,totalCO2  ;
+
+	private Road road;
+
+
 
 	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws Exception {
 		super(id);
@@ -24,131 +34,102 @@ public class Vehicle extends SimulatedObject {
 		}
 	}
 
-	private List<Junction> itinerary = new ArrayList<Junction>();
-
-	private int maximumSpeed = 0;
-
-	private int currentSpeed = 0;
-
-	private int getSpeed() {
+	
+	public int getLocation() {
+		return location;
+	}
+	
+	public int getSpeed() {
 		return currentSpeed;
 	}
 
-
-	private VehicleStatus status;
-
-	private Road road = null;
-
-	int location = 0;
-
-	int contClass = 0;
-
-	int totalCO2 = 0;
-
-	int totalTraveledDistance = 0;
-
-	private Road getRoad() {
-		return road;
+	
+	public int getMaxSpeed() {
+		return maximumSpeed;
 	}
-
-	private void setRoad(Road road) {
-		this.road = road;
-	}
-
-	private int getLocation() {
-		return location;
-	}
-
-	private void setLocation(int location) {
-		this.location = location;
-	}
-
-	private int getContClass() {
+	
+	public int getContClass() {
 		return contClass;
 	}
 
-	private void setContClass(int contClass) {
-		this.contClass = contClass;
+	public VehicleStatus getVehicleStatus() {
+		return status;
 	}
-
-	private int getTotalCO2() {
+	
+	public int getTotalCO2() {
 		return totalCO2;
 	}
-
-	private void setTotalCO2(int totalContamination) {
-		this.totalCO2 = totalContamination;
+	
+	public List<Junction> getItinerary() {
+		return itinerary;
 	}
-
-	private int getTotalTraveledDistance() {
-		return totalTraveledDistance;
+	
+	public Road getRoad() {
+		return road;
 	}
+	
 
-	private void setTotalTraveledDistance(int totalTraveledDistance) {
-		this.totalTraveledDistance = totalTraveledDistance;
-	}
+	
 
-	void setSpeed(int s) {
+
+	void setSpeed(int s) throws Exception {
 		if (s < 0) {
 			throw new Exception("s cannot be negative");
 		}
-		int speed = 0;
-		if (status == VehicleStatus.TRAVELING) {
-			speed = 0;
-		} else if (s > maximumSpeed) {
-			speed = maximumSpeed;
+
+		 if (s > maximumSpeed) {
+			this.currentSpeed = maximumSpeed;
 		} else
-			speed = s;
+			this.currentSpeed = s;
 
 	}
 
-	void setContaminationClass(int c) {
-
+	void setContaminationClass(int c) throws Exception {
+		
+		if(c>=0 && c<10) {
+			this.contClass = c;
+		}
+		else {
+		throw new Exception("C is not between 0 and 10");
+		}
 	}
+
 	
-	private VehicleStatus getStatus() {
-		return status;
-	}
 
-	private void setStatus(VehicleStatus status) {
-		this.status = status;
-	}
+	
 
 	@Override
 	void advance(int time) {
-		int oldlocation = getLocation();
-		if (status == VehicleStatus.TRAVELING) {
-			if ((getLocation() + currentSpeed) <= Road.length) {
-				setLocation(getLocation() + currentSpeed);
-			} else {
-				setLocation(Road.length);
-				Junction.enter(Vehicle._id);
-				status = VehicleStatus.WAITING;
-			}
-
-			int contamination = (getLocation() - oldlocation) * getContClass();
-			setTotalCO2(contamination);
-			Road.addContamination(contamination);
-
-		} else
-			break;
-
-	}
-
-	void moveToNextRoad() {
-		if (getStatus().equals(VehicleStatus.PENDING)) {
-			itinerary
+		if(status != VehicleStatus.TRAVELING) {
+			return;
 		}
-		Road.exit();
-		Road.enter();
+		else {
+			int old_location = location;
+			int c;
+			location = Math.min(currentSpeed+location,road.getLength() );
+			 c = (location - old_location) * contClass;
+			 
+			totalCO2+=c;
+			road.addContamination(c);
+			if(location == road.getLength()) {
+				currentSpeed=0;
+				status = VehicleStatus.WAITING;
+				itinerary.get(-1).enter();
+			}
+		}
 		
 	}
 
-//	@Override
-//	void advance(int time) {
-//		// TODO Auto-generated method stub
-//
-//	}
+	void moveToNextRoad() throws Exception {
+			if(status.equals(VehicleStatus.PENDING) || status.equals(VehicleStatus.WAITING)){
+				
+			}
+			else {
+			throw new  Exception("status is not PENDING or WAITING");
+		}
 
+
+	}
 	@Override
 	public JSONObject report() {
 		// TODO Auto-generated method stub
