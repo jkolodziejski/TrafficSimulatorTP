@@ -14,6 +14,8 @@ public class Vehicle extends SimulatedObject {
 	private int maximumSpeed, currentSpeed, location,contClass,totalTraveledDistance,totalCO2  ;
 
 	private Road road;
+	
+	private int last_seen_junction=0;
 
 
 
@@ -55,6 +57,9 @@ public class Vehicle extends SimulatedObject {
 	public VehicleStatus getVehicleStatus() {
 		return status;
 	}
+	public VehicleStatus getStatus() {
+		return status;
+	}
 	
 	public int getTotalCO2() {
 		return totalCO2;
@@ -68,7 +73,9 @@ public class Vehicle extends SimulatedObject {
 		return road;
 	}
 	
-
+	public int getTotalTraveledDistance() {
+		return totalTraveledDistance;
+	}
 	
 
 
@@ -107,14 +114,17 @@ public class Vehicle extends SimulatedObject {
 			int old_location = location;
 			int c;
 			location = Math.min(currentSpeed+location,road.getLength() );
+	
 			 c = (location - old_location) * contClass;
+			 totalTraveledDistance+=location - old_location;
 			 
 			totalCO2+=c;
 			road.addContamination(c);
 			if(location == road.getLength()) {
 				currentSpeed=0;
 				status = VehicleStatus.WAITING;
-				itinerary.get(-1).enter();
+				itinerary.get(last_seen_junction).enter();
+				last_seen_junction++;
 			}
 		}
 		
@@ -122,7 +132,17 @@ public class Vehicle extends SimulatedObject {
 
 	void moveToNextRoad() throws Exception {
 			if(status.equals(VehicleStatus.PENDING) || status.equals(VehicleStatus.WAITING)){
-				
+				if(road != null || last_seen_junction==0) {
+					road.exit();
+				}
+				else if (last_seen_junction == itinerary.size()) {
+					status = VehicleStatus.ARRIVED;
+				} 
+				else {
+					location=0;
+					status = VehicleStatus.TRAVELING;
+					//Ask Juntion
+				}
 			}
 			else {
 			throw new  Exception("status is not PENDING or WAITING");
