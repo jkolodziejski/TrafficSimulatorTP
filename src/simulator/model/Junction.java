@@ -1,11 +1,13 @@
 package simulator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Junction extends SimulatedObject{
@@ -39,13 +41,24 @@ public class Junction extends SimulatedObject{
     	 else {
     		 throw new Exception("xCoor or yCoor is negative");
     	 }
- 
-    	 
+    	 this.queues= new ArrayList<>();
+    	 this.queueByRoad=new HashMap<>();
+    	 this.outRoadByJunction= new HashMap<>();
+    	 inRoads= new ArrayList<>() ;
+    
     	 }
      
      public List<Road> getInRoads() {
  		return inRoads;
  	}
+     
+    public int getGreenLightIndex() {
+		return greenLightIndex;
+	}
+    
+    public List<List<Vehicle>> getQueues() {
+		return queues;
+	}
      
      void addIncommingRoad(Road r) throws Exception {
     	 if(r.getDest().equals(this)) {
@@ -61,7 +74,7 @@ public class Junction extends SimulatedObject{
      }
      
      void addOutGotingRoad(Road r) throws Exception {
-    	 if(r.getSrc().equals(this) && r.getDest().getInRoads() == null) {
+    	 if(r.getSrc().equals(this)) {
     		 outRoadByJunction.put(r.getDest(),r);
     		 
     		 
@@ -92,8 +105,21 @@ public class Junction extends SimulatedObject{
 
 
 	@Override
-	void advance(int time) {
+	void advance(int time) throws Exception  {
 		if(greenLightIndex != -1) {
+			List<Vehicle> supprotList = queues.get(greenLightIndex);
+			supprotList=dqs.dequeue(supprotList);
+			for(Vehicle v : supprotList) {
+				v.moveToNextRoad();
+				supprotList.remove(v);
+				
+			}
+			int status_light = lss.chooseNextGreen(inRoads, queues, greenLightIndex, lastSwitchingTime, time);
+			 if (status_light != greenLightIndex) {
+				 greenLightIndex=status_light;
+				 lastSwitchingTime = time;
+			 }
+			
 			
 		}
 		
@@ -103,8 +129,20 @@ public class Junction extends SimulatedObject{
 
 	@Override
 	public JSONObject report() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject obj = new JSONObject();
+		obj.put("id", getId());
+		obj.put("green", getGreenLightIndex());
+		JSONArray array = new JSONArray();
+		for (int i=0;i<getQueues().size();i++) {
+			JSONObject road = new JSONObject();
+			road.put("road", getInRoads().get(i));
+			road.put("vehicles", getQueues().get(i));
+			array.put(road);
+		}
+		obj.put("queues", array);
+		
+		
+		return obj;
 	}
 
 	

@@ -1,21 +1,23 @@
 package simulator.model;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import javax.xml.transform.Source;
+
 
 import org.json.JSONObject;
 
 public abstract class Road extends SimulatedObject{
 	
-	private Junction addIncommingRoad, addOutgoingRoad ;
+	private Junction destJunc, srcJunc ;
 	private int length, maxSpeed, current_speed_limit,  contLimit, contTotal;
 	private Weather weather;
 	private List<Vehicle> vehicles;
 	
-	Road(String id, Junction addIncommingRoad, Junction addOutgoingRoad, int maxSpeed, int contLimit, int length, Weather weather) throws Exception {
+	Road(String id, Junction destJunc, Junction srcJunc, int maxSpeed, int contLimit, int length, Weather weather) throws Exception {
 		super(id);
+		this.vehicles = new ArrayList<>();
 		if(maxSpeed>0) {
 			this.maxSpeed = maxSpeed;
 		
@@ -37,10 +39,14 @@ public abstract class Road extends SimulatedObject{
 		}
 		
 		
-		if(addIncommingRoad!=null && addOutgoingRoad!= null && weather!=null) {
-			this.addIncommingRoad = addIncommingRoad;
-			this.addOutgoingRoad = addOutgoingRoad;
+		if(destJunc!=null && srcJunc!= null && weather!=null) {
+			this.destJunc = destJunc;
+			this.srcJunc = srcJunc;
+			srcJunc.addIncommingRoad(this);
+			
+			destJunc.addOutGotingRoad(this);
 			this.weather = weather;
+			
 		}
 		else {
 			throw new Exception("Source junction, destination junction or weather conditions   is null");
@@ -55,11 +61,11 @@ public abstract class Road extends SimulatedObject{
 	
 
 	@Override
-	void advance(int time) {
+	void advance(int time) throws Exception {
 		reduceTotalContamination();
 		updateSpeedLimit();
 		for (Vehicle v : vehicles) {
-			calculateVehicleSpeed(v);
+			v.setSpeed(calculateVehicleSpeed(v));
 			v.advance(time);
 			}
 			//sort vehicle
@@ -122,10 +128,10 @@ public abstract class Road extends SimulatedObject{
 		return length;
 	}
 	public Junction getDest() {
-		return addOutgoingRoad;
+		return srcJunc;
 	}
 	public Junction getSrc() {
-		return addIncommingRoad;
+		return destJunc;
 	}
 	public Weather getWeather() {
 		return weather;
@@ -144,6 +150,10 @@ public abstract class Road extends SimulatedObject{
 	}
 	public List<Vehicle> getVehicles() {
 		return vehicles;
+	}
+	
+	public void setCurrent_speed_limit(int current_speed_limit) {
+		this.current_speed_limit = current_speed_limit;
 	}
 	
 	
