@@ -1,5 +1,6 @@
 package simulator.model;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.transform.Source;
@@ -8,45 +9,41 @@ import org.json.JSONObject;
 
 public abstract class Road extends SimulatedObject{
 	
-	protected Junction srcJunc, destJunc ;
-	protected int length, maxSpeed, current_speed_limit,  contLimit, contTotal;
-	protected Weather weather;
-	protected List<Vehicle> vehicles;
+	private Junction addIncommingRoad, addOutgoingRoad ;
+	private int length, maxSpeed, current_speed_limit,  contLimit, contTotal;
+	private Weather weather;
+	private List<Vehicle> vehicles;
 	
-	Road(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length, Weather weather) {
+	Road(String id, Junction addIncommingRoad, Junction addOutgoingRoad, int maxSpeed, int contLimit, int length, Weather weather) throws Exception {
 		super(id);
-		try {
 		if(maxSpeed>0) {
 			this.maxSpeed = maxSpeed;
+		
+		}else  {
+		throw new Exception("Max speed is not positive number");
 		}
-		}catch (Exception e) {
-			System.out.println("Max speed is not positive number");
+		if(contLimit>=0) {
+			this.contLimit = contLimit;
+			
+		}else {
+			throw new Exception("Contamination alarm limit is negative number");
 		}
 		
-		try {
-			if(contLimit>=0) {
-				this.contLimit = contLimit;
-			}
-			}catch (Exception e) {
-				System.out.println("Contamination alarm limit is negative number");
-			}
+		if(length>0) {
+			this.length = length;
+		}
+		else  {
+			throw new Exception("Length is not positive number");
+		}
 		
-		try {
-			if(length>0) {
-				this.length = length;
-			}
-			}catch (Exception e) {
-				System.out.println("Length is not positive number");
-			}
 		
-		try {
-			if(srcJunc!=null && destJunc!= null && weather!=null) {
-				this.srcJunc = srcJunc;
-				this.destJunc = destJunc;
-				this.weather = weather;
-			}
-			}catch (Exception e) {
-				System.out.println("Source junction, destination junction or weather conditions   is null");
+		if(addIncommingRoad!=null && addOutgoingRoad!= null && weather!=null) {
+			this.addIncommingRoad = addIncommingRoad;
+			this.addOutgoingRoad = addOutgoingRoad;
+			this.weather = weather;
+		}
+		else {
+			throw new Exception("Source junction, destination junction or weather conditions   is null");
 			}
 		
 		
@@ -62,9 +59,10 @@ public abstract class Road extends SimulatedObject{
 		reduceTotalContamination();
 		updateSpeedLimit();
 		for (Vehicle v : vehicles) {
-			
-		}
-			
+			calculateVehicleSpeed(v);
+			v.advance(time);
+			}
+			//sort vehicle
 		
 	}
 
@@ -75,16 +73,16 @@ public abstract class Road extends SimulatedObject{
 		raportString.put("speedimit",getSpeedlimit());
 		raportString.put("weather", getWeather());
 		raportString.put("co2", getTotalCO2());
-		
-		
-		
-		
 
 		return raportString;
 	}
 	
-	 void enter(Vehicle v) {
+	 void enter(Vehicle v) throws Exception {
+		 if(v.getSpeed()==0 || v.getLocation()==0) {
 		this.vehicles.add(v);
+		 }else {
+			 throw new Exception("Speed or location is not zero");
+		 }
 		
 	}
 	
@@ -117,17 +115,17 @@ public abstract class Road extends SimulatedObject{
 	
 	abstract void updateSpeedLimit();
 	
-	abstract int calculateVehicleSpeed(Vehicle v);
+	abstract int calculateVehicleSpeed(Vehicle v) ;
 	
 	
 	public int getLength() {
 		return length;
 	}
 	public Junction getDest() {
-		return destJunc;
+		return addOutgoingRoad;
 	}
 	public Junction getSrc() {
-		return srcJunc;
+		return addIncommingRoad;
 	}
 	public Weather getWeather() {
 		return weather;

@@ -133,7 +133,7 @@ public class Vehicle extends SimulatedObject {
 	void moveToNextRoad() throws Exception {
 			if(status.equals(VehicleStatus.PENDING) || status.equals(VehicleStatus.WAITING)){
 				if(road != null || last_seen_junction==0) {
-					road.exit();
+					road.exit(this);
 				}
 				else if (last_seen_junction == itinerary.size()) {
 					status = VehicleStatus.ARRIVED;
