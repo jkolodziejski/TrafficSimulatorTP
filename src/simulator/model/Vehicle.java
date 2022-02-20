@@ -136,6 +136,7 @@ public class Vehicle extends SimulatedObject {
 			int old_location = location;
 			int c;
 			location = Math.min((currentSpeed+location),road.getLength() );
+			
 			 c = (location - old_location) * contClass;
 			 totalTraveledDistance+=location - old_location;
 			 

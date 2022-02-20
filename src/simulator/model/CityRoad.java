@@ -9,21 +9,19 @@ public final class CityRoad extends Road{
 	@Override
 	void reduceTotalContamination() {
 		if(getWeather().equals(Weather.WINDY) || getWeather().equals(Weather.STORM)){
-			addContamination(getTotalCO2()-10);
+			contTotal-=10;
 		}
-		else {
-			addContamination(getTotalCO2()-2);
-		}
+	//ASK Teacher about this
 	}
 
 	@Override
 	void updateSpeedLimit() {
-		setCurrent_speed_limit(getMaxSpeed());
+		current_speed_limit = getMaxSpeed();
 	}
 
 	@Override
 	int calculateVehicleSpeed(Vehicle v) {
-		return ((11-v.getContClass())*getSpeedlimit())/11;
+		return ((11-v.getContClass())*getSpeedLimit())/11;
 	}
 
 }

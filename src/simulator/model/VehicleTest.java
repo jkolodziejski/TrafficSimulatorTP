@@ -78,7 +78,7 @@ class VehicleTest {
 		// check that the report/toString is OK
 		String s = "{\"distance\":0,\"co2\":0,\"id\":\"v1\",\"class\":1,\"speed\":0,\"status\":\"PENDING\"}";
 		JSONObject jo = new JSONObject(s);
-		System.out.println(v1.getStatus());
+	
 		
 		JSONObject report = v1.report();
 		assertTrue(jo.similar(report));

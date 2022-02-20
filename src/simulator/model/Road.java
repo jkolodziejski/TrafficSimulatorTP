@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public abstract class Road extends SimulatedObject{
 	
 	private Junction destJunc, srcJunc ;
-	private int length, maxSpeed, current_speed_limit,  contLimit, contTotal;
+	protected int length, maxSpeed, current_speed_limit,  contLimit, contTotal;
 	private Weather weather;
 	private List<Vehicle> vehicles;
 	
@@ -20,6 +20,7 @@ public abstract class Road extends SimulatedObject{
 		this.vehicles = new ArrayList<>();
 		if(maxSpeed>0) {
 			this.maxSpeed = maxSpeed;
+			this.current_speed_limit=maxSpeed;
 		
 		}else  {
 		throw new Exception("Max speed is not positive number");
@@ -56,6 +57,27 @@ public abstract class Road extends SimulatedObject{
 		}
 	
 	
+	private static void sort_vehicle(List<Vehicle> vehicles) {
+		int size = vehicles.size();
+		int min,i,j;
+		 Vehicle tmpVehicle;
+		for (i=0;i<size-1;i++)  {
+			min=i;
+			for (j=i+1;j<size;j++) {
+				if (vehicles.get(j).getLocation()>vehicles.get(min).getLocation()) {
+					
+					min=j;
+					
+				}
+			}
+		tmpVehicle	= vehicles.get(min);
+		vehicles.set(min,vehicles.get(i));
+		vehicles.set(i,tmpVehicle);
+
+		}
+	}
+	
+	
 	
 
 	
@@ -68,17 +90,22 @@ public abstract class Road extends SimulatedObject{
 			v.setSpeed(calculateVehicleSpeed(v));
 			v.advance(time);
 			}
-			//sort vehicle
+			sort_vehicle(vehicles);
 		
 	}
 
 	@Override
 	public JSONObject report() {
 		JSONObject raportString = new JSONObject();
-		raportString.put(_id, getId());
-		raportString.put("speedimit",getSpeedlimit());
-		raportString.put("weather", getWeather());
+		raportString.put("id", getId());
+		raportString.put("speedlimit",getSpeedLimit());
+		raportString.put("weather", weather.toString());
 		raportString.put("co2", getTotalCO2());
+		List<String> vehicleString = new ArrayList<>();
+		for(int i=0;i<vehicles.size();i++) {
+			vehicleString.add(vehicles.get(i).getId());
+		}
+		raportString.put("vehicles",vehicleString);
 
 		return raportString;
 	}
@@ -96,21 +123,19 @@ public abstract class Road extends SimulatedObject{
 		this.vehicles.remove(v);
 	}
 	
-	void setWeather(Weather w) {
-		try {
+	void setWeather(Weather w) throws Exception {
 			if(w != null) {
 				this.weather=w;
 			}
-		}
-		catch (Exception e) {
-			System.out.println("Weather is null");
+			else {
+			throw new Exception("Weather is null");
 		}
 	}
 	
 	void addContamination(int c) {
 		try {
 			if(c>=0) {
-				this.contTotal=c;
+				this.contTotal+=c;
 			}
 		}catch (Exception e) {
 			System.out.println("Adding contamination is negative number");
@@ -145,11 +170,11 @@ public abstract class Road extends SimulatedObject{
 	public int getTotalCO2() {
 		return contTotal;
 	}
-	public int getSpeedlimit() {
+	public int getSpeedLimit() {
 		return current_speed_limit;
 	}
 	public List<Vehicle> getVehicles() {
-		return vehicles;
+		return Collections.unmodifiableList(vehicles);
 	}
 	
 	public void setCurrent_speed_limit(int current_speed_limit) {
