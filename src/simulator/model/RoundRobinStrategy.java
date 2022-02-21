@@ -24,7 +24,7 @@ public class RoundRobinStrategy implements LightSwitchingStrategy {
 			return -1;
 		}
 		else {
-			return currGreen+1;
+			return (currGreen+1)%qs.size();
 		}
 	}
 
