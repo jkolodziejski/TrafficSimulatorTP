@@ -15,19 +15,20 @@ public class MostCrowdedStrategy implements LightSwitchingStrategy {
 	public int chooseNextGreen(List<Road> roads, List<List<Vehicle>> qs, int currGreen, int lastSwitchingTime,
 			int currTime) {
 		if(currGreen==-1) {
-			int size = 0;
+			int size =0;
 			int count=0;
 			int green=0;
 			for (List<Vehicle> list : qs) {
-					count++;
+					
 				if (size<list.size()) {
 					size=list.size();
 					green=count;
 				}	
+				count++;
 			}
 			return green;
 		}
-		if ( currGreen!=-1 && currTime - lastSwitchingTime < timeSlot) {
+		else if ( currGreen!=-1 && currTime - lastSwitchingTime < timeSlot) {
 			return currGreen;
 		}
 		else if(qs.isEmpty() ) {
@@ -37,7 +38,7 @@ public class MostCrowdedStrategy implements LightSwitchingStrategy {
 			int size = 0;
 			int green=0;
 			for (int i=0;i<qs.size();i++) {
-				int offset = (i+currGreen)%qs.size();
+				int offset = (i+currGreen+1)%qs.size();
 				if(qs.get(offset).size()>size) {
 					size=qs.get(offset).size();
 					green=offset;
