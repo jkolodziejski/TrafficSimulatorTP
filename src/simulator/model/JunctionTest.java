@@ -31,6 +31,7 @@ class JunctionTest {
 		assertNull(j2.roadTo(j4));
 		assertNull(j3.roadTo(j1));
 		assertNull(j3.roadTo(j2));
+		System.out.println(j1.report());
 
 	}
 	

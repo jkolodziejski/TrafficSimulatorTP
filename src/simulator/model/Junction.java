@@ -45,6 +45,8 @@ public class Junction extends SimulatedObject{
     	 this.queueByRoad=new HashMap<>();
     	 this.outRoadByJunction= new HashMap<>();
     	 inRoads= new ArrayList<>() ;
+    	 this.greenLightIndex=-1;
+    	 this.lastSwitchingTime=0;
     
     	 }
      
@@ -131,7 +133,12 @@ public class Junction extends SimulatedObject{
 	public JSONObject report() {
 		JSONObject obj = new JSONObject();
 		obj.put("id", getId());
-		obj.put("green", getGreenLightIndex());
+		if(getGreenLightIndex()==-1) {
+			obj.put("green", "none");
+		}
+		else {
+		obj.put("green", getInRoads().get(greenLightIndex).getId());
+		}
 		JSONArray array = new JSONArray();
 		for (int i=0;i<getQueues().size();i++) {
 			JSONObject road = new JSONObject();
