@@ -1,5 +1,7 @@
 package simulator.model;
 
+import java.net.Socket;
+
 public class InterCityRoad extends Road {
 	
 	
@@ -29,13 +31,14 @@ public class InterCityRoad extends Road {
 		else if(this.getWeather().equals(Weather.STORM)){
 			x=20;
 		}
-		addContamination((100-x)*getTotalCO2()/100);
-		
+	
+		contTotal =((100-x)*getTotalCO2())/100;
+		System.out.println(getTotalCO2());
 	}
 
 	@Override
 	void updateSpeedLimit() {
-		if (getTotalCO2() == getContLimit()) {
+		if (getTotalCO2() >= getContLimit()) {
 			current_speed_limit = getMaxSpeed()/2;
 		}
 		else {
@@ -47,10 +50,10 @@ public class InterCityRoad extends Road {
 	@Override
 	int calculateVehicleSpeed(Vehicle v) {
 		if (getWeather().equals(Weather.STORM)) {
-			return v.getSpeed()*8/10;
+			return getSpeedLimit()*8/10;
 		}
 		else {
-		 return v.getSpeed();
+		 return getSpeedLimit();
 
 		}
 		

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 class InterCityRoadTest {
 
 	@Test
-	void test_basic_info() {
+	void test_basic_info() throws Exception {
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -48,7 +48,7 @@ class InterCityRoadTest {
 
 	// one vehicle overtakes another
 	@Test
-	void test_1() {
+	void test_1() throws Exception {
 
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -106,7 +106,7 @@ class InterCityRoadTest {
 
 	// list of vehicles is returned as unmodifiable
 	@Test
-	void test_list_of_vehicles_is_readonly() {
+	void test_list_of_vehicles_is_readonly() throws Exception {
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -122,7 +122,7 @@ class InterCityRoadTest {
 	}
 
 	@Test
-	void test_report() {
+	void test_report() throws Exception {
 
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -146,11 +146,13 @@ class InterCityRoadTest {
 		r1.advance(1);
 
 		s="{\"speedlimit\":100,\"co2\":350,\"weather\":\"SUNNY\",\"vehicles\":[\"v2\",\"v1\"],\"id\":\"r1\"}\n";
+		System.out.println(s);
+		System.out.println(r1.report());
 		assertTrue(new JSONObject(s).similar(r1.report()));
 	}
 
 	@Test
-	void error_handling() {
+	void error_handling() throws Exception {
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
