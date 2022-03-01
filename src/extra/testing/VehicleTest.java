@@ -1,4 +1,4 @@
-package simulator.model;
+package extra.testing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,11 +8,20 @@ import java.util.Arrays;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
+import simulator.model.CityRoad;
+import simulator.model.Junction;
+import simulator.model.MoveFirstStrategy;
+import simulator.model.Road;
+import simulator.model.RoundRobinStrategy;
+import simulator.model.Vehicle;
+import simulator.model.VehicleStatus;
+import simulator.model.Weather;
+
 class VehicleTest {
 
 		
 	@Test
-	void getset_contamination_class() throws Exception {
+	void getset_contamination_class()  {
 
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -34,7 +43,7 @@ class VehicleTest {
 	}
 
 	@Test
-	void getset_test_speed() throws Exception {
+	void getset_test_speed()  {
 
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -67,7 +76,7 @@ class VehicleTest {
 	}
 
 	@Test
-	void test_report() throws Exception {
+	void test_report()  {
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -88,7 +97,7 @@ class VehicleTest {
 	
 	// when asking for the itinerary, it should be returned as read only
 	@Test
-	void test_iterinary_is_readonly() throws Exception {
+	void test_iterinary_is_readonly()  {
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -102,7 +111,7 @@ class VehicleTest {
 	
 	// some basic tests of the different methods
 	@Test
-	void test_1() throws Exception {
+	void test_1() {
 
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -158,7 +167,7 @@ class VehicleTest {
 	}
 
 	@Test
-	void error_handling() throws Exception {
+	void error_handling()  {
 		
 		// two junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);

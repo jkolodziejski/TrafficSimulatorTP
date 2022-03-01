@@ -6,8 +6,8 @@ public class InterCityRoad extends Road {
 	
 	
 
-	InterCityRoad(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length,
-			Weather weather) throws Exception {
+	public InterCityRoad(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length,
+			Weather weather)  {
 		super(id, srcJunc, destJunc, maxSpeed, contLimit, length, weather);
 		
 	}
@@ -33,7 +33,7 @@ public class InterCityRoad extends Road {
 		}
 	
 		contTotal =((100-x)*getTotalCO2())/100;
-		System.out.println(getTotalCO2());
+		
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package simulator.model;
+package extra.testing;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,11 +8,15 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import simulator.misc.Utils;
+import simulator.model.Junction;
+import simulator.model.MoveFirstStrategy;
+import simulator.model.RoundRobinStrategy;
+import simulator.model.Vehicle;
 
-public class MoveAllStrategyTest {
+public class MoveFirstStrategyTest {
 
 	@Test
-	void test_1() throws Exception {
+	void test_1() {
 		//  junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -25,9 +29,10 @@ public class MoveAllStrategyTest {
 		
 		List<Vehicle> q = Utils.arrayToList(vs);
 		
-		MoveAllStrategy st = new MoveAllStrategy();
+		MoveFirstStrategy st = new MoveFirstStrategy();
 		List<Vehicle> nq = st.dequeue(q);
 
-		assertTrue( q.equals(nq) );
+		assertTrue( nq.size() == 1);
+		assertTrue( nq.get(0).equals(q.get(0)));
 	}
 }

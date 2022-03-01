@@ -23,14 +23,14 @@ public class Junction extends SimulatedObject{
 	
 	
 	
-     Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) throws Exception {
+     public Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor)  {
     	 super(id);
     	 if(lsStrategy != null && dqStrategy != null) {
     		this.lss = lsStrategy;
     		this.dqs = dqStrategy;
     	 }
     	 else {
-    		 throw new Exception("LightSwitchingStrategy or DequeuingStrategy is null ");
+    		 throw new IllegalArgumentException("LightSwitchingStrategy or DequeuingStrategy is null ");
 			
 		}
     	 
@@ -39,7 +39,7 @@ public class Junction extends SimulatedObject{
     		 this.y = yCoor;
     	 }
     	 else {
-    		 throw new Exception("xCoor or yCoor is negative");
+    		 throw new IllegalArgumentException("xCoor or yCoor is negative");
     	 }
     	 this.queues= new ArrayList<>();
     	 this.queueByRoad=new HashMap<>();
@@ -61,28 +61,30 @@ public class Junction extends SimulatedObject{
     public List<List<Vehicle>> getQueues() {
 		return queues;
 	}
+    
+    
      
-     void addIncommingRoad(Road r) throws Exception {
+     void addIncommingRoad(Road r)  {
     	 if(r.getDest().equals(this)) {
     		 inRoads.add(r);
-    		 LinkedList queue = new LinkedList<Vehicle>();
+    		 LinkedList<Vehicle> queue = new LinkedList<Vehicle>();
     		 queues.add(queue);
     		 queueByRoad.put(r, queue);
     		 
     	 }
     	 else {
-    		 throw new Exception("destination junction is not  equal to the current junction");
+    		 throw new IllegalArgumentException("destination junction is not  equal to the current junction");
     	 }
      }
      
-     void addOutGotingRoad(Road r) throws Exception {
+     void addOutGotingRoad(Road r)  {
     	 if(r.getSrc().equals(this)) {
     		 outRoadByJunction.put(r.getDest(),r);
     		 
     		 
     	 }
     	 else {
-    		 throw new Exception("Other road go junction or that road is not outgoing road");
+    		 throw new IllegalArgumentException("Other road go junction or that road is not outgoing road");
     	 }
     	 
      }
@@ -97,7 +99,7 @@ public class Junction extends SimulatedObject{
     	
      }
      
-     Road roadTo(Junction j) {
+     public Road roadTo(Junction j) {
 		return outRoadByJunction.get(j);
     	 
      }
@@ -107,16 +109,17 @@ public class Junction extends SimulatedObject{
 
 
 	@Override
-	void advance(int time) throws Exception  {
+	void advance(int time)  {
 		if(greenLightIndex != -1) {
 			List<Vehicle> supprotList = queues.get(greenLightIndex);
 			supprotList=dqs.dequeue(supprotList);
 			for(Vehicle v : supprotList) {
 				v.moveToNextRoad();
-				supprotList.remove(v);
+				queues.get(greenLightIndex).remove(v);
 				
 			}
-			int status_light = lss.chooseNextGreen(inRoads, queues, greenLightIndex, lastSwitchingTime, time);
+		}
+		int status_light = lss.chooseNextGreen(inRoads, queues, greenLightIndex, lastSwitchingTime, time);
 			 if (status_light != greenLightIndex) {
 				 greenLightIndex=status_light;
 				 lastSwitchingTime = time;
@@ -125,7 +128,7 @@ public class Junction extends SimulatedObject{
 			
 		}
 		
-	}
+	
 
 
 
@@ -137,7 +140,8 @@ public class Junction extends SimulatedObject{
 			obj.put("green", "none");
 		}
 		else {
-		obj.put("green", getInRoads().get(greenLightIndex).getId());
+			
+			obj.put("green", getInRoads().get(greenLightIndex).getId());
 		}
 		JSONArray array = new JSONArray();
 		for (int i=0;i<getQueues().size();i++) {

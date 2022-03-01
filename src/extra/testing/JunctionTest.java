@@ -1,13 +1,20 @@
-package simulator.model;
+package extra.testing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import simulator.model.InterCityRoad;
+import simulator.model.Junction;
+import simulator.model.MoveFirstStrategy;
+import simulator.model.Road;
+import simulator.model.RoundRobinStrategy;
+import simulator.model.Weather;
+
 class JunctionTest {
 
 	@Test
-	void test_1() throws Exception {
+	void test_1()  {
 		// junctions
 		Junction j1 = new Junction("j1", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
 		Junction j2 = new Junction("j2", new RoundRobinStrategy(10), new MoveFirstStrategy(), 0, 0);
@@ -31,7 +38,7 @@ class JunctionTest {
 		assertNull(j2.roadTo(j4));
 		assertNull(j3.roadTo(j1));
 		assertNull(j3.roadTo(j2));
-		System.out.println(j1.report());
+		
 
 	}
 	

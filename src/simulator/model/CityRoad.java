@@ -2,21 +2,22 @@ package simulator.model;
 
 public final class CityRoad extends Road{
 
-	public CityRoad(String _id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length, Weather weather) throws Exception {
+	public CityRoad(String _id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length, Weather weather) {
 		super(_id, srcJunc, destJunc, maxSpeed, contLimit, length, weather);
 	}
 
 	@Override
 	void reduceTotalContamination() {
 		if(getWeather().equals(Weather.WINDY) || getWeather().equals(Weather.STORM)){
-			contTotal-=10;
+			if(contTotal>=10) contTotal-=10;
 		}
-	//ASK Teacher about this
+		else{
+			if(contTotal>=2) contTotal-=2;
+		}
 	}
 
 	@Override
 	void updateSpeedLimit() {
-		current_speed_limit = getMaxSpeed();
 	}
 
 	@Override

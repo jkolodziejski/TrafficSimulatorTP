@@ -15,7 +15,7 @@ public abstract class Road extends SimulatedObject{
 	private Weather weather;
 	private List<Vehicle> vehicles;
 	
-	Road(String id, Junction destJunc, Junction srcJunc, int maxSpeed, int contLimit, int length, Weather weather) throws Exception {
+	Road(String id, Junction destJunc, Junction srcJunc, int maxSpeed, int contLimit, int length, Weather weather)  {
 		super(id);
 		this.vehicles = new ArrayList<>();
 		if(maxSpeed>0) {
@@ -23,20 +23,20 @@ public abstract class Road extends SimulatedObject{
 			this.current_speed_limit=maxSpeed;
 		
 		}else  {
-		throw new Exception("Max speed is not positive number");
+		throw new IllegalArgumentException("Max speed is not positive number");
 		}
 		if(contLimit>=0) {
 			this.contLimit = contLimit;
 			
 		}else {
-			throw new Exception("Contamination alarm limit is negative number");
+			throw new IllegalArgumentException("Contamination alarm limit is negative number");
 		}
 		
 		if(length>0) {
 			this.length = length;
 		}
 		else  {
-			throw new Exception("Length is not positive number");
+			throw new IllegalArgumentException("Length is not positive number");
 		}
 		
 		
@@ -50,7 +50,7 @@ public abstract class Road extends SimulatedObject{
 			
 		}
 		else {
-			throw new Exception("Source junction, destination junction or weather conditions   is null");
+			throw new IllegalArgumentException("Source junction, destination junction or weather conditions   is null");
 			}
 		
 		
@@ -77,13 +77,17 @@ public abstract class Road extends SimulatedObject{
 		}
 	}
 	
+	abstract void reduceTotalContamination();
 	
+	abstract void updateSpeedLimit();
+	
+	abstract int calculateVehicleSpeed(Vehicle v) ;
 	
 
 	
 
 	@Override
-	void advance(int time) throws Exception {
+	public void advance(int time) {
 		reduceTotalContamination();
 		updateSpeedLimit();
 		for (Vehicle v : vehicles) {
@@ -110,11 +114,11 @@ public abstract class Road extends SimulatedObject{
 		return raportString;
 	}
 	
-	 void enter(Vehicle v) throws Exception {
+	 void enter(Vehicle v)  {
 		 if(v.getSpeed()==0 || v.getLocation()==0) {
 		this.vehicles.add(v);
 		 }else {
-			 throw new Exception("Speed or location is not zero");
+			 throw new IllegalArgumentException("Speed or location is not zero");
 		 }
 		
 	}
@@ -123,12 +127,12 @@ public abstract class Road extends SimulatedObject{
 		this.vehicles.remove(v);
 	}
 	
-	void setWeather(Weather w) throws Exception {
+	public void setWeather(Weather w)  {
 			if(w != null) {
 				this.weather=w;
 			}
 			else {
-			throw new Exception("Weather is null");
+			throw new IllegalArgumentException("Weather is null");
 		}
 	}
 	
@@ -142,11 +146,7 @@ public abstract class Road extends SimulatedObject{
 		}
 	}
 	
-	abstract void reduceTotalContamination();
-	
-	abstract void updateSpeedLimit();
-	
-	abstract int calculateVehicleSpeed(Vehicle v) ;
+
 	
 	
 	public int getLength() {
@@ -177,10 +177,7 @@ public abstract class Road extends SimulatedObject{
 		return Collections.unmodifiableList(vehicles);
 	}
 	
-	public void setCurrent_speed_limit(int current_speed_limit) {
-		this.current_speed_limit = current_speed_limit;
-	}
 	
-	
+
 }
 	

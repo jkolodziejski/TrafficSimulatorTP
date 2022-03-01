@@ -19,28 +19,25 @@ public class Vehicle extends SimulatedObject {
 
 
 
-	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws Exception {
+	public Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary)  {
 		
 		super(id);
-		if (id == null | id.length() == 0) {
-			throw new Exception("id cannot be nonempty");
-			
-		}
+
 		if (maxSpeed <= 0) {
-			throw new Exception("maxSpeed needs to be positive");
+			throw new IllegalArgumentException("maxSpeed needs to be positive");
 			
 		}
 		else {
 			this.maximumSpeed = maxSpeed;
 		}
 		if (contClass < 0 | contClass > 10) {
-			throw new Exception("contClass needs to be between 0 and 10 (inclusive)");
+			throw new IllegalArgumentException("contClass needs to be between 0 and 10 (inclusive)");
 		}
 		else {
 			this.contClass=contClass;
 		}
 		if (itinerary.size() < 2) {
-			throw new Exception("itinerary needs to have a length of at least 2");
+			throw new IllegalArgumentException("itinerary needs to have a length of at least 2");
 		}
 		else {
 			this.itinerary=itinerary;
@@ -99,9 +96,9 @@ public class Vehicle extends SimulatedObject {
 	
 
 
-	void setSpeed(int s) throws Exception {
+	public void setSpeed(int s) {
 		if (s < 0) {
-			throw new Exception("s cannot be negative");
+			throw new IllegalArgumentException("s cannot be negative");
 		}
 		if(status == VehicleStatus.TRAVELING) {
 
@@ -113,13 +110,13 @@ public class Vehicle extends SimulatedObject {
 	}
 		
 	}
-	void setContClass(int c) throws Exception {
+	public void setContClass(int c)  {
 		
 		if(c>=0 && c<10) {
 			this.contClass = c;
 		}
 		else {
-		throw new Exception("C is not between 0 and 10");
+		throw new IllegalArgumentException("C is not between 0 and 10");
 		}
 	}
 
@@ -152,7 +149,7 @@ public class Vehicle extends SimulatedObject {
 		
 	}
 
-	void moveToNextRoad() throws Exception {
+	public void moveToNextRoad()  {
 			if(status.equals(VehicleStatus.PENDING) || status.equals(VehicleStatus.WAITING)){
 				if(road != null && last_seen_junction==0) {
 					road.exit(this);
@@ -172,7 +169,7 @@ public class Vehicle extends SimulatedObject {
 				}
 			}
 			else {
-			throw new  Exception("status is not PENDING or WAITING");
+			throw new  IllegalArgumentException("status is not PENDING or WAITING");
 		}
 
 
@@ -189,7 +186,7 @@ public class Vehicle extends SimulatedObject {
 		obj.put("status",status.toString());
 	
 		if(status != VehicleStatus.PENDING && status != VehicleStatus.ARRIVED) {
-			obj.put("road", getRoad().toString());
+			obj.put("road", road.toString());
 			obj.put("location", getLocation());
 		}
 		
