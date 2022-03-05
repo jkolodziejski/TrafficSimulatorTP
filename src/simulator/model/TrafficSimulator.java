@@ -1,6 +1,8 @@
 package simulator.model;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -31,13 +33,17 @@ public class TrafficSimulator {
     	 }
     	 else {
     		 _events.add(e);
+    		 _events.sort(Comparator.comparing(Event::getTime));
     	 }
     	 
      }
      
      public void advance() {
     	 _time++;
-    	 while(_events.size()>0 && _events.get(0).getTime()<=_time) {
+    	 
+    	 
+    	 while(_events.size()>0 &&  _events.get(0).getTime()==_time) {
+    		 
     		 _events.remove(0).execute(_roadMap);
     	 }
     	 for(Junction junction : _roadMap.getJunctions()) {

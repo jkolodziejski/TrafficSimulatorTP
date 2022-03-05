@@ -31,26 +31,21 @@ class TrafficSimulatorTest {
 
 		
 		String s = "{\"time\":1,\"state\":{\"roads\":[{\"speedlimit\":100,\"co2\":150,\"weather\":\"SUNNY\",\"vehicles\":[\"v1\",\"v2\",\"v3\"],\"id\":\"r1\"},{\"speedlimit\":100,\"co2\":0,\"weather\":\"SUNNY\",\"vehicles\":[],\"id\":\"r2\"}],\"vehicles\":[{\"distance\":50,\"road\":\"r1\",\"co2\":50,\"location\":50,\"id\":\"v1\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"},{\"distance\":50,\"road\":\"r1\",\"co2\":50,\"location\":50,\"id\":\"v2\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"},{\"distance\":50,\"road\":\"r1\",\"co2\":50,\"location\":50,\"id\":\"v3\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"}],\"junctions\":[{\"green\":\"none\",\"queues\":[],\"id\":\"j1\"},{\"green\":\"r1\",\"queues\":[{\"road\":\"r1\",\"vehicles\":[]}],\"id\":\"j2\"},{\"green\":\"r2\",\"queues\":[{\"road\":\"r2\",\"vehicles\":[]}],\"id\":\"j3\"}]}}";
-		System.out.println(s);
-		System.out.println(ts.report());
-		//assertTrue(new JSONObject(s).similar(ts.report()));
+		
+		assertTrue(new JSONObject(s).similar( new JSONObject(ts.report().toString() )));
 
 		ts.advance();
 		ts.advance();
 		
 		
 		s = "{\"time\":3,\"state\":{\"roads\":[{\"speedlimit\":100,\"co2\":446,\"weather\":\"CLOUDY\",\"vehicles\":[\"v1\",\"v2\",\"v3\"],\"id\":\"r1\"},{\"speedlimit\":100,\"co2\":0,\"weather\":\"RAINY\",\"vehicles\":[],\"id\":\"r2\"}],\"vehicles\":[{\"distance\":150,\"road\":\"r1\",\"co2\":150,\"location\":150,\"id\":\"v1\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"},{\"distance\":150,\"road\":\"r1\",\"co2\":150,\"location\":150,\"id\":\"v2\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"},{\"distance\":150,\"road\":\"r1\",\"co2\":150,\"location\":150,\"id\":\"v3\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"}],\"junctions\":[{\"green\":\"none\",\"queues\":[],\"id\":\"j1\"},{\"green\":\"r1\",\"queues\":[{\"road\":\"r1\",\"vehicles\":[]}],\"id\":\"j2\"},{\"green\":\"r2\",\"queues\":[{\"road\":\"r2\",\"vehicles\":[]}],\"id\":\"j3\"}]}}";
-		System.out.println(s);
-		System.out.println(ts.report());
-		//assertTrue(new JSONObject(s).similar(ts.report()));
+		assertTrue(new JSONObject(s).similar(new JSONObject(ts.report().toString() )));
 
 		ts.advance();
 		ts.advance();
 
 		s = "{\"time\":5,\"state\":{\"roads\":[{\"speedlimit\":100,\"co2\":1094,\"weather\":\"CLOUDY\",\"vehicles\":[\"v1\",\"v2\",\"v3\"],\"id\":\"r1\"},{\"speedlimit\":100,\"co2\":0,\"weather\":\"RAINY\",\"vehicles\":[],\"id\":\"r2\"}],\"vehicles\":[{\"distance\":250,\"road\":\"r1\",\"co2\":400,\"location\":250,\"id\":\"v1\",\"class\":4,\"speed\":50,\"status\":\"TRAVELING\"},{\"distance\":250,\"road\":\"r1\",\"co2\":250,\"location\":250,\"id\":\"v2\",\"class\":1,\"speed\":50,\"status\":\"TRAVELING\"},{\"distance\":236,\"road\":\"r1\",\"co2\":452,\"location\":236,\"id\":\"v3\",\"class\":7,\"speed\":36,\"status\":\"TRAVELING\"}],\"junctions\":[{\"green\":\"none\",\"queues\":[],\"id\":\"j1\"},{\"green\":\"r1\",\"queues\":[{\"road\":\"r1\",\"vehicles\":[]}],\"id\":\"j2\"},{\"green\":\"r2\",\"queues\":[{\"road\":\"r2\",\"vehicles\":[]}],\"id\":\"j3\"}]}}";
-		System.out.println(s);
-		System.out.println(ts.report());
-		assertTrue(new JSONObject(s).similar(ts.report()));
+		assertTrue(new JSONObject(s).similar(new JSONObject(ts.report().toString() )));
 
 	}
 }

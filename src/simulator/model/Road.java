@@ -3,10 +3,8 @@ package simulator.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-
-
 import org.json.JSONObject;
+
 
 public abstract class Road extends SimulatedObject{
 	
@@ -15,7 +13,7 @@ public abstract class Road extends SimulatedObject{
 	private Weather weather;
 	private List<Vehicle> vehicles;
 	
-	Road(String id, Junction destJunc, Junction srcJunc, int maxSpeed, int contLimit, int length, Weather weather)  {
+	Road(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length, Weather weather)  {
 		super(id);
 		this.vehicles = new ArrayList<>();
 		if(maxSpeed>0) {
@@ -43,9 +41,9 @@ public abstract class Road extends SimulatedObject{
 		if(destJunc!=null && srcJunc!= null && weather!=null) {
 			this.destJunc = destJunc;
 			this.srcJunc = srcJunc;
-			srcJunc.addIncommingRoad(this);
+			destJunc.addIncommingRoad(this);
 			
-			destJunc.addOutGotingRoad(this);
+			srcJunc.addOutGotingRoad(this);
 			this.weather = weather;
 			
 		}
@@ -77,6 +75,42 @@ public abstract class Road extends SimulatedObject{
 		}
 	}
 	
+	
+	 void enter(Vehicle v)  {
+		 if(v.getSpeed()==0 && v.getLocation()==0) {
+			 this.vehicles.add(v);
+			 sort_vehicle(vehicles);
+		 }else {
+			 throw new IllegalArgumentException("Speed or location is not zero");
+		 }
+		
+	}
+	 
+	 
+	 void exit(Vehicle v) {
+			this.vehicles.remove(v);
+	}
+	 
+	 
+	 
+	 public void setWeather(Weather w)  {
+			if(w != null) {
+				this.weather=w;
+			}
+			else {
+			throw new IllegalArgumentException("Weather is null");
+		}
+	}
+	 
+	 
+	 void addContamination(int c) {
+			if(c>=0) {
+				this.contTotal+=c;
+			}else {
+			throw new IllegalArgumentException("Adding contamination is negative number");
+		}
+	}
+	
 	abstract void reduceTotalContamination();
 	
 	abstract void updateSpeedLimit();
@@ -97,66 +131,16 @@ public abstract class Road extends SimulatedObject{
 			sort_vehicle(vehicles);
 		
 	}
-
-	@Override
-	public JSONObject report() {
-		JSONObject raportString = new JSONObject();
-		raportString.put("id", getId());
-		raportString.put("speedlimit",getSpeedLimit());
-		raportString.put("weather", weather.toString());
-		raportString.put("co2", getTotalCO2());
-		List<String> vehicleString = new ArrayList<>();
-		for(int i=0;i<vehicles.size();i++) {
-			vehicleString.add(vehicles.get(i).getId());
-		}
-		raportString.put("vehicles",vehicleString);
-
-		return raportString;
-	}
-	
-	 void enter(Vehicle v)  {
-		 if(v.getSpeed()==0 || v.getLocation()==0) {
-		this.vehicles.add(v);
-		 }else {
-			 throw new IllegalArgumentException("Speed or location is not zero");
-		 }
-		
-	}
-	
-	void exit(Vehicle v) {
-		this.vehicles.remove(v);
-	}
-	
-	public void setWeather(Weather w)  {
-			if(w != null) {
-				this.weather=w;
-			}
-			else {
-			throw new IllegalArgumentException("Weather is null");
-		}
-	}
-	
-	void addContamination(int c) {
-		try {
-			if(c>=0) {
-				this.contTotal+=c;
-			}
-		}catch (Exception e) {
-			System.out.println("Adding contamination is negative number");
-		}
-	}
-	
-
 	
 	
 	public int getLength() {
 		return length;
 	}
 	public Junction getDest() {
-		return srcJunc;
+		return destJunc;
 	}
 	public Junction getSrc() {
-		return destJunc;
+		return srcJunc;
 	}
 	public Weather getWeather() {
 		return weather;
@@ -176,6 +160,31 @@ public abstract class Road extends SimulatedObject{
 	public List<Vehicle> getVehicles() {
 		return Collections.unmodifiableList(vehicles);
 	}
+	
+
+	@Override
+	public JSONObject report() {
+		JSONObject raportString = new JSONObject();
+		raportString.put("id", getId());
+		raportString.put("speedlimit",getSpeedLimit());
+		raportString.put("weather", weather.toString());
+		raportString.put("co2", getTotalCO2());
+		List<String> vehicleString = new ArrayList<>();
+		for(int i=0;i<vehicles.size();i++) {
+			vehicleString.add(vehicles.get(i).getId());
+		}
+		raportString.put("vehicles",vehicleString);
+
+		return raportString;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 

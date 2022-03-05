@@ -50,17 +50,7 @@ public class Junction extends SimulatedObject{
     
     	 }
      
-     public List<Road> getInRoads() {
- 		return inRoads;
- 	}
-     
-    public int getGreenLightIndex() {
-		return greenLightIndex;
-	}
-    
-    public List<List<Vehicle>> getQueues() {
-		return queues;
-	}
+   
     
     
      
@@ -90,13 +80,9 @@ public class Junction extends SimulatedObject{
      }
      
      void enter(Vehicle v) {
-    	int index_road = inRoads.indexOf(v.getRoad());
-    	List<Vehicle> support_list = queues.get(index_road);
-    	support_list.add(v);
-    	queues.add(index_road, support_list);
-    	queueByRoad.put(v.getRoad(), support_list);
-    	
-    	
+    	 queues.get(inRoads.indexOf(v.getRoad())).add(v);;
+    	 queueByRoad.get(v.getRoad()).add(v);
+    	 
      }
      
      public Road roadTo(Junction j) {
@@ -106,11 +92,13 @@ public class Junction extends SimulatedObject{
      
     
 
-
+   
 
 	@Override
 	void advance(int time)  {
 		if(greenLightIndex != -1) {
+			
+			
 			List<Vehicle> supprotList = queues.get(greenLightIndex);
 			supprotList=dqs.dequeue(supprotList);
 			for(Vehicle v : supprotList) {
@@ -121,6 +109,7 @@ public class Junction extends SimulatedObject{
 		}
 		int status_light = lss.chooseNextGreen(inRoads, queues, greenLightIndex, lastSwitchingTime, time);
 			 if (status_light != greenLightIndex) {
+				 
 				 greenLightIndex=status_light;
 				 lastSwitchingTime = time;
 			 }
@@ -129,7 +118,17 @@ public class Junction extends SimulatedObject{
 		}
 		
 	
-
+	  public List<Road> getInRoads() {
+	 		return inRoads;
+	 	}
+	     
+	    public int getGreenLightIndex() {
+			return greenLightIndex;
+		}
+	    
+	    public List<List<Vehicle>> getQueues() {
+			return queues;
+		}
 
 
 	@Override

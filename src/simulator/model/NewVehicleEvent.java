@@ -26,11 +26,7 @@ public class NewVehicleEvent extends Event {
 			itinerary.add(map.getJunction(idString));
 		}
 		Vehicle vehilce = new Vehicle(id, maxSpeed, contClass, itinerary);
-		try {
-			map.addVehicle(vehilce);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		map.addVehicle(vehilce);
 		vehilce.moveToNextRoad();
 		
 

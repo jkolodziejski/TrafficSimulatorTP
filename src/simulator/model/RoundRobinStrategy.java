@@ -18,15 +18,16 @@ public class RoundRobinStrategy implements LightSwitchingStrategy {
 			return -1;
 		
 		}
-		else if(currGreen==-1) {
+		if(currGreen==-1) {
 			return 0;
 		}
+		
 		else if ( currTime - lastSwitchingTime < timeSlot) {
 			return currGreen;
 		}
 		
 		else {
-			return (currGreen+1)%qs.size();
+			return ((currGreen+1)%roads.size());
 		}
 	}
 

@@ -11,7 +11,7 @@ public class Vehicle extends SimulatedObject {
 	
 	private VehicleStatus status;
 	
-	private int maximumSpeed, currentSpeed, location,contClass,totalTraveledDistance,totalCO2   ;
+	protected int maximumSpeed, currentSpeed, location,contClass,totalTraveledDistance,totalCO2   ;
 
 	private Road road;
 	
@@ -52,6 +52,93 @@ public class Vehicle extends SimulatedObject {
 		
 		
 	}
+	
+	
+	public void setSpeed(int s) {
+		if (s < 0) {
+			throw new IllegalArgumentException("s cannot be negative");
+		}
+		if(status == VehicleStatus.TRAVELING) {
+			
+		currentSpeed = Math.min(s, maximumSpeed);
+		}
+		
+	}
+	
+	public void setContClass(int c)  {
+		
+		if(c>=0 && c<=10) {
+			contClass = c;
+		}
+		else {
+		throw new IllegalArgumentException("C is not between 0 and 10");
+		}
+	}
+	
+	
+	
+	
+	
+	
+
+	@Override
+	void advance(int time) {
+		if(status != VehicleStatus.TRAVELING) {
+			return;
+		}
+		else {
+			int old_location = location;
+			int c;
+			location = Math.min((currentSpeed+location),road.getLength());
+			
+			 c = (location - old_location) * contClass;
+			 totalCO2+=c;
+			road.addContamination(c);
+			totalTraveledDistance+=(location - old_location);
+			 
+			
+			if(location == road.getLength()) {
+				
+				currentSpeed=0;
+				status = VehicleStatus.WAITING;
+				last_seen_junction++;
+				itinerary.get(last_seen_junction).enter(this);
+				
+				
+				
+			}
+		}
+		
+	}
+	
+	
+	public void moveToNextRoad()  {
+		if(status.equals(VehicleStatus.PENDING) || status.equals(VehicleStatus.WAITING)){
+			
+			//Problem
+			if(road != null || last_seen_junction!=0){
+				road.exit(this);
+			}
+			if (last_seen_junction == itinerary.size()) {
+				status = VehicleStatus.ARRIVED;
+				road = null;
+				currentSpeed=0;
+				location=0;
+			}  
+			else {
+				status = VehicleStatus.TRAVELING;
+				road= itinerary.get(last_seen_junction).roadTo(itinerary.get(last_seen_junction+1));
+				
+				location=0;
+				road.enter(this);
+			}
+		}
+		else {
+		throw new  IllegalArgumentException("status is not PENDING or WAITING");
+	}
+
+
+}
 
 	
 	public int getLocation() {
@@ -96,84 +183,15 @@ public class Vehicle extends SimulatedObject {
 	
 
 
-	public void setSpeed(int s) {
-		if (s < 0) {
-			throw new IllegalArgumentException("s cannot be negative");
-		}
-		if(status == VehicleStatus.TRAVELING) {
-
-		 if (s > maximumSpeed) {
-			this.currentSpeed = maximumSpeed;
-		} else
-			this.currentSpeed = s;
-
-	}
-		
-	}
-	public void setContClass(int c)  {
-		
-		if(c>=0 && c<10) {
-			this.contClass = c;
-		}
-		else {
-		throw new IllegalArgumentException("C is not between 0 and 10");
-		}
-	}
+	
+	
 
 	
 
 	
 
-	@Override
-	void advance(int time) {
-		if(status != VehicleStatus.TRAVELING) {
-			return;
-		}
-		else {
-			int old_location = location;
-			int c;
-			location = Math.min((currentSpeed+location),road.getLength() );
-			
-			 c = (location - old_location) * contClass;
-			 totalTraveledDistance+=location - old_location;
-			 
-			totalCO2+=c;
-			road.addContamination(c);
-			if(location == road.getLength()) {
-				currentSpeed=0;
-				status = VehicleStatus.WAITING;
-				itinerary.get(last_seen_junction).enter(this);
-				last_seen_junction++;
-			}
-		}
-		
-	}
 
-	public void moveToNextRoad()  {
-			if(status.equals(VehicleStatus.PENDING) || status.equals(VehicleStatus.WAITING)){
-				if(road != null && last_seen_junction==0) {
-					road.exit(this);
-				}
-				else if (last_seen_junction == itinerary.size()) {
-					status = VehicleStatus.ARRIVED;
-					road = null;
-					currentSpeed=0;
-					location=0;
-					
-				}  
-				else {
-					status = VehicleStatus.TRAVELING;
-					road= itinerary.get(last_seen_junction).roadTo(itinerary.get(last_seen_junction+1));
-					location=0;
-					road.enter(this);
-				}
-			}
-			else {
-			throw new  IllegalArgumentException("status is not PENDING or WAITING");
-		}
-
-
-	}
+	
 	@Override
 	public JSONObject report() {
 		// TODO Auto-generated method stub

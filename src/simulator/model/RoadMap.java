@@ -54,7 +54,7 @@ public class RoadMap {
 	}
 	
 	public Junction getJunction(String id) {
-		if(mapJunction.containsKey(id)){				// no idea how to do this correctly
+		if(mapJunction.containsKey(id)){				
 			
 			return mapJunction.get(id);
 		}
@@ -62,14 +62,14 @@ public class RoadMap {
 	}
 	
 	public Vehicle getVehicle(String id) {
-		if(mapVehicle.containsKey(id)){					// no idea how to do this correctly
+		if(mapVehicle.containsKey(id)){					
 			return mapVehicle.get(id);
 		}
 		else return null;
 	}
 	
 	public Road getRoad(String id) {
-		if(mapRoad.containsKey(id)){					// no idea how to do this correctly
+		if(mapRoad.containsKey(id)){					
 			return mapRoad.get(id);
 		}
 		else return null;
@@ -104,21 +104,23 @@ public class RoadMap {
 		JSONObject obj = new JSONObject();
 		JSONArray array = new JSONArray();
 		for (Junction junction : getJunctions()) {
+			
 			array.put(junction.report());
 		}
 		obj.put("junctions", array);
 		
-		array = new JSONArray();
+		JSONArray array1 = new JSONArray();
 		for (Road road : getRoads()) {
-			array.put(road.report());
+			array1.put(road.report());
 		}
-		obj.put("roads", array);
+		obj.put("roads", array1);
 		
-		array = new JSONArray();
+		JSONArray array2 = new JSONArray();
+		
 		for (Vehicle vehicle : getVehicles()) {
-			array.put(vehicle.report());
+			array2.put(vehicle.report());
 		}
-		obj.put("vehicles", array);
+		obj.put("vehicles", array2);
 		return obj;
 	}
 	

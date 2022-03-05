@@ -1,6 +1,5 @@
 package simulator.model;
 
-import java.net.Socket;
 
 public class InterCityRoad extends Road {
 	
