@@ -106,6 +106,7 @@ public class Vehicle extends SimulatedObject {
 				
 				
 				
+				
 			}
 		}
 		
@@ -119,7 +120,7 @@ public class Vehicle extends SimulatedObject {
 			if(road != null || last_seen_junction!=0){
 				road.exit(this);
 			}
-			if (last_seen_junction == itinerary.size()) {
+			if (last_seen_junction+1 == itinerary.size()) {
 				status = VehicleStatus.ARRIVED;
 				road = null;
 				currentSpeed=0;

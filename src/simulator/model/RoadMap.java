@@ -104,11 +104,9 @@ public class RoadMap {
 		JSONObject obj = new JSONObject();
 		JSONArray array = new JSONArray();
 		for (Junction junction : getJunctions()) {
-			
 			array.put(junction.report());
 		}
 		obj.put("junctions", array);
-		
 		JSONArray array1 = new JSONArray();
 		for (Road road : getRoads()) {
 			array1.put(road.report());

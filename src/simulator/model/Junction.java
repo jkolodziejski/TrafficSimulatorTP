@@ -80,9 +80,7 @@ public class Junction extends SimulatedObject{
      }
      
      void enter(Vehicle v) {
-    	 queues.get(inRoads.indexOf(v.getRoad())).add(v);;
-    	 queueByRoad.get(v.getRoad()).add(v);
-    	 
+    	 queues.get(inRoads.indexOf(v.getRoad())).add(v);
      }
      
      public Road roadTo(Junction j) {
@@ -101,7 +99,9 @@ public class Junction extends SimulatedObject{
 			
 			List<Vehicle> supprotList = queues.get(greenLightIndex);
 			supprotList=dqs.dequeue(supprotList);
+			
 			for(Vehicle v : supprotList) {
+				
 				v.moveToNextRoad();
 				queues.get(greenLightIndex).remove(v);
 				
@@ -126,8 +126,9 @@ public class Junction extends SimulatedObject{
 			return greenLightIndex;
 		}
 	    
-	    public List<List<Vehicle>> getQueues() {
-			return queues;
+	    @SuppressWarnings("unchecked")
+		public List<List<Vehicle>> getQueues() {
+	    	return  Collections.unmodifiableList(new ArrayList(queues));
 		}
 
 
@@ -146,7 +147,11 @@ public class Junction extends SimulatedObject{
 		for (int i=0;i<getQueues().size();i++) {
 			JSONObject road = new JSONObject();
 			road.put("road", getInRoads().get(i));
-			road.put("vehicles", getQueues().get(i));
+			ArrayList<String> queuesArray = new ArrayList<>();
+			for(Vehicle vehicle : getQueues().get(i)) {
+				queuesArray.add(vehicle.getId());
+			}
+			road.put("vehicles", queuesArray);
 			array.put(road);
 		}
 		obj.put("queues", array);
