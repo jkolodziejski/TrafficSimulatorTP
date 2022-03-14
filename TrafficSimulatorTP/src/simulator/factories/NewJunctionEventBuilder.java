@@ -29,7 +29,7 @@ public class NewJunctionEventBuilder extends Builder<Event> {
 		
 		
 		
-		return  new NewJunctionEvent(time, id,  lssFactory.createInstance(data.getJSONObject("ls_strategy")) , dqsFactory.createInstance(data.getJSONObject("dq_strategy")),  (int) coorsArray.get(0), (int) coorsArray.get(1)); 
+		return  new NewJunctionEvent(time, id,  lssFactory.createInstance(data.getJSONObject("ls_strategy")) , dqsFactory.createInstance(data.getJSONObject("dq_strategy")),  coorsArray.getInt(0), coorsArray.getInt(1)); 
 	}
 
 }

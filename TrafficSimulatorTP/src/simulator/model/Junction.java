@@ -97,13 +97,13 @@ public class Junction extends SimulatedObject{
 		if(greenLightIndex != -1) {
 			
 			
-			List<Vehicle> supprotList = queues.get(greenLightIndex);
-			supprotList=dqs.dequeue(supprotList);
+			List<Vehicle> supprotList1 = queues.get(greenLightIndex);
+			List<Vehicle> supprotList=dqs.dequeue(supprotList1);
 			
 			for(Vehicle v : supprotList) {
 				
 				v.moveToNextRoad();
-				queues.get(greenLightIndex).remove(v);
+				supprotList1.remove(v);
 				
 			}
 		}
@@ -146,10 +146,10 @@ public class Junction extends SimulatedObject{
 		JSONArray array = new JSONArray();
 		for (int i=0;i<getQueues().size();i++) {
 			JSONObject road = new JSONObject();
-			road.put("road", getInRoads().get(i));
-			ArrayList<String> queuesArray = new ArrayList<>();
+			road.put("road", getInRoads().get(i).getId());
+			JSONArray queuesArray = new JSONArray();
 			for(Vehicle vehicle : getQueues().get(i)) {
-				queuesArray.add(vehicle.getId());
+				queuesArray.put(vehicle.getId());
 			}
 			road.put("vehicles", queuesArray);
 			array.put(road);

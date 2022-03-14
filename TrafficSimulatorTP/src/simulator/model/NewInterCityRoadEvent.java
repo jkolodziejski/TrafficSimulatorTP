@@ -12,18 +12,9 @@ public class NewInterCityRoadEvent extends NewRoadEvent {
 	public void execute(RoadMap map) {
 		InterCityRoad interCityRoad=null;
 		
-		try {
 			interCityRoad = new InterCityRoad(id, map.getJunction(srcJun), map.getJunction(destJunc), maxSpeed, co2limit, length, weather);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
+	
 			map.addRoad(interCityRoad);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 
 	}
-
 }

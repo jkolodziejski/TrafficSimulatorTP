@@ -33,7 +33,8 @@ public class TrafficSimulator {
     	 }
     	 else {
     		 _events.add(e);
-    		 _events.sort(Comparator.comparing(Event::getTime));
+    		 _events.sort((p1,p2)->{return p1.compareTo(p2);});
+    		 
     	 }
     	 
      }

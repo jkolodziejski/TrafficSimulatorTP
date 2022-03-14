@@ -3,6 +3,8 @@ package simulator.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 
@@ -79,7 +81,10 @@ public abstract class Road extends SimulatedObject{
 	 void enter(Vehicle v)  {
 		 if(v.getSpeed()==0 && v.getLocation()==0) {
 			 this.vehicles.add(v);
-			 sort_vehicle(vehicles);
+			 vehicles.sort((p1, p2) -> {
+		      return Integer.compare(p1.getLocation(), p2.getLocation());
+			  });
+			 //sort_vehicle(vehicles);
 		 }else {
 			 throw new IllegalArgumentException("Speed or location is not zero");
 		 }
@@ -169,9 +174,9 @@ public abstract class Road extends SimulatedObject{
 		raportString.put("speedlimit",getSpeedLimit());
 		raportString.put("weather", weather.toString());
 		raportString.put("co2", getTotalCO2());
-		List<String> vehicleString = new ArrayList<>();
+		JSONArray vehicleString = new JSONArray();
 		for(int i=0;i<vehicles.size();i++) {
-			vehicleString.add(vehicles.get(i).getId());
+			vehicleString.put(vehicles.get(i).getId());
 		}
 		raportString.put("vehicles",vehicleString);
 
