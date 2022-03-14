@@ -53,12 +53,9 @@ public class RoadMap {
 			throw new IllegalArgumentException("vehicle already in list");
 	}
 	
-	public Junction getJunction(String id) {
-		if(mapJunction.containsKey(id)){				
-			
-			return mapJunction.get(id);
-		}
-		else return null;
+	public Junction getJunction(String id) {				
+		return mapJunction.get(id);
+	
 	}
 	
 	public Vehicle getVehicle(String id) {
@@ -125,8 +122,12 @@ public class RoadMap {
 	private boolean itinerary_check(List<Junction> itinerary) {
 		boolean status=true;
 		for(int i=0;i<itinerary.size()-1;i++) {
+			if( itinerary.get(i).roadTo(itinerary.get(i+1)).getId() != null) {
 			if(!mapRoad.containsKey(itinerary.get(i).roadTo(itinerary.get(i+1)).getId())){
 				return status;
+			}
+			}else {
+				throw new IllegalArgumentException("no such road connecting");
 			}
 			
 		}

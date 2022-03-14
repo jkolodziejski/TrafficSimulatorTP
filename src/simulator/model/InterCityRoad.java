@@ -14,23 +14,32 @@ public class InterCityRoad extends Road {
 	@Override
 	void reduceTotalContamination() {
 		int x=0;
-		if(this.getWeather().equals(Weather.SUNNY)) {
+		
+		switch (getWeather()) {
+		case SUNNY: {
 			x=2;
+			break;
+			
+		}
+		case CLOUDY:{
+			x=3;
+			break;
+		}
+		case RAINY:{
+			x=10;
+			break;
+			
+		}
+		case WINDY :{
+			x=15;
+			break;
+		}
+		case STORM : {
+			x=20;
+			break;
 		}
 		
-		else if(this.getWeather().equals(Weather.CLOUDY)) {
-			x=3;
 		}
-		else if(this.getWeather().equals(Weather.RAINY)) {
-			x=10;
-		}
-		else if(this.getWeather().equals(Weather.WINDY)) {
-			x=15;
-		}
-		else if(this.getWeather().equals(Weather.STORM)){
-			x=20;
-		}
-	
 		contTotal =((100-x)*getTotalCO2())/100;
 		
 	}

@@ -7,9 +7,7 @@ public class MoveAllStrategy implements DequeuingStrategy{
 
 	@Override
 	public List<Vehicle> dequeue(List<Vehicle> q) {
-		List<Vehicle> returnList = new ArrayList<Vehicle>();
-		returnList = q;
-		return returnList;
+		return new ArrayList<Vehicle>(q);
 	}
 
 }

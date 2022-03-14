@@ -43,7 +43,6 @@ public class Vehicle extends SimulatedObject {
 			this.itinerary=itinerary;
 		}
 		this.status = VehicleStatus.PENDING;
-		Collections.unmodifiableList(new ArrayList<>(itinerary));
 		this.currentSpeed=0;
 		this.location=0;
 		this.totalTraveledDistance=0;
