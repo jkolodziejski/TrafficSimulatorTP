@@ -9,11 +9,12 @@ import org.json.JSONObject;
 
 import simulator.misc.SortedArrayList;
 
-public class TrafficSimulator {
+public class TrafficSimulator implements Observable<TrafficSimObserver>{
 
 	RoadMap _roadMap;
 	List<Event> _events;
 	int _time;
+	protected List<TrafficSimObserver> observer;
 
 	public TrafficSimulator() {
 		_roadMap = new RoadMap();
@@ -25,6 +26,9 @@ public class TrafficSimulator {
     	 _roadMap = new RoadMap();
     	 _events = new ArrayList<>();
     	 _time = 0;
+    	 for(TrafficSimObserver obs : observer) {
+    		 obs.onReset(_roadMap, _events, _time);
+    	 }
      }
      
      public void addEvent(Event e) {
@@ -33,6 +37,9 @@ public class TrafficSimulator {
     	 }
     	 else {
     		 _events.add(e);
+    		 for(TrafficSimObserver obs : observer) {
+        		 obs.onEventAdded(_roadMap, _events, e, _time);
+        	 }
     		 _events.sort((p1,p2)->{return p1.compareTo(p2);});
     		 
     	 }
@@ -41,7 +48,9 @@ public class TrafficSimulator {
      
      public void advance() {
     	 _time++;
-    	 
+    	 for(TrafficSimObserver obs : observer) {
+    		 obs.onAdvanceStart(_roadMap, _events, _time);
+    	 }
     	 
     	 while(_events.size()>0 &&  _events.get(0).getTime()==_time) {
     		 
@@ -54,6 +63,9 @@ public class TrafficSimulator {
     	 for(Road road : _roadMap.getRoads()) {
     		 road.advance(_time);
     	 }
+    	 for(TrafficSimObserver obs : observer) {
+    		 obs.onAdvanceEnd(_roadMap, _events, _time);
+    	 }
      }
      
      public JSONObject report() {
@@ -64,4 +76,17 @@ public class TrafficSimulator {
 		return object;
     	 
      }
+
+	@Override
+	public void addObserver(TrafficSimObserver o) {
+		this.observer.add(o);
+		o.onRegister(_roadMap, _events, _time);
+		
+	}
+
+	@Override
+	public void removeObserver(TrafficSimObserver o) {
+		this.observer.remove(o);
+		
+	}
  }
