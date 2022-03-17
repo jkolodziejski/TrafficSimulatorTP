@@ -23,6 +23,9 @@ import simulator.model.*;
 
 public class Main {
 
+	enum ExeMode{GUI, BATCH};
+	private static ExeMode _mode = ExeMode.GUI;
+	
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static String _inFile = null;
 	private static String _outFile = null;
@@ -159,6 +162,16 @@ public class Main {
 	private static void start(String[] args) throws IOException {
 		initFactories();
 		parseArgs(args);
+		
+		switch (_mode) {
+		case GUI:
+			//startGUIMode();
+			break;
+		case BATCH :
+			startBatchMode();
+		default:
+			break;
+		}
 		startBatchMode();
 	}
 

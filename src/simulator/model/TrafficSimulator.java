@@ -33,7 +33,11 @@ public class TrafficSimulator implements Observable<TrafficSimObserver>{
      
      public void addEvent(Event e) {
     	 if(e.getTime() <=_time) {
+    		 for(TrafficSimObserver obs : observer) {
+        		 obs.onError("Cannot add events for the past!");
+        	 }
     		 throw new IllegalArgumentException("Cannot add events for the past!");
+    		 
     	 }
     	 else {
     		 _events.add(e);

@@ -159,6 +159,15 @@ public class Junction extends SimulatedObject{
 		
 		return obj;
 	}
+	
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
+	}
 
 	
 }
