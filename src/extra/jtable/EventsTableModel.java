@@ -1,14 +1,14 @@
 package extra.jtable;
 
 import java.util.List;
+//import extra.jtable.*;
 
 import javax.swing.table.AbstractTableModel;
 
+import simulator.control.Controller;
+
 public class EventsTableModel extends AbstractTableModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -17,6 +17,10 @@ public class EventsTableModel extends AbstractTableModel {
 
 	public EventsTableModel() {
 		_events=null;
+	}
+
+	public EventsTableModel(Controller _ctrl) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public void update() {
