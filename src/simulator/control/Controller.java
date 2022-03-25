@@ -33,6 +33,7 @@ public class Controller {
 		JSONObject jo = new JSONObject(new JSONTokener(in));
 		JSONArray events = jo.getJSONArray("events");
 		for(int i=0;i<events.length();i++) {
+			
 			traffic_simulator.addEvent(events_factory.createInstance(events.getJSONObject(i)));
 			
 		}

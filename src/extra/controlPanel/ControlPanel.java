@@ -46,7 +46,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 		// trying to implement the FileChooser
 		JFileChooser fc = new JFileChooser();
-		int returnVal = fc.showOpenDialog(parent);
+		//int returnVal = fc.showOpenDialog(parent);
 //		if (returnVal == JFileChooser.APPROVE_OPTION) {
 //			System.out.println("You chose to open this file: " + fc.getSelectedFile().getName());
 //		}

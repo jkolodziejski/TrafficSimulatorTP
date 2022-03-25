@@ -17,4 +17,10 @@ public class NewInterCityRoadEvent extends NewRoadEvent {
 			map.addRoad(interCityRoad);
 
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

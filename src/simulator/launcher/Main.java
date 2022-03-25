@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -19,6 +21,7 @@ import org.apache.commons.cli.ParseException;
 import simulator.control.Controller;
 import simulator.factories.*;
 import simulator.model.*;
+import simulator.view.MainWindow;
 
 
 public class Main {
@@ -135,6 +138,27 @@ public class Main {
 		  
 		  
 	}
+	
+	private static void startGUIMode() throws IOException {
+		InputStream _in = new FileInputStream(_inFile);
+		 OutputStream out;
+		 if(_outFile != null) {
+			  out = new FileOutputStream(_outFile);
+			 
+		 }
+		 else {
+			out = System.out;
+		 }
+		 TrafficSimulator trafficSimulator = new TrafficSimulator();
+		 Controller controller = new Controller(trafficSimulator, _eventsFactory);
+		 controller.loadEvents(_in);
+		 _in.close();
+		 controller.run(_timeLimit, out);
+	
+		SwingUtilities.invokeLater(() -> new MainWindow(controller));
+		
+		
+	}
 
 	private static void startBatchMode() throws IOException {
 		
@@ -152,11 +176,6 @@ public class Main {
 		 controller.loadEvents(_in);
 		 _in.close();
 		 controller.run(_timeLimit, out);
-		 
-		 
-		 
-		
-		// TODO complete this method to start the simulation
 	}
 
 	private static void start(String[] args) throws IOException {
@@ -165,7 +184,7 @@ public class Main {
 		
 		switch (_mode) {
 		case GUI:
-			//startGUIMode();
+			startGUIMode();
 			break;
 		case BATCH :
 			startBatchMode();
@@ -181,6 +200,8 @@ public class Main {
 	// -i resources/examples/ex1.json -t 300
 	// -i resources/examples/ex1.json -o resources/tmp/ex1.out.json
 	// --help
+
+
 
 	public static void main(String[] args) {
 		try {

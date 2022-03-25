@@ -30,4 +30,6 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public abstract void execute(RoadMap map);
+	
+	public abstract String toString();
 }
