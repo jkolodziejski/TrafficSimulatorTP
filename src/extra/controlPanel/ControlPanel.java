@@ -3,12 +3,6 @@ package extra.controlPanel;
 import java.awt.BorderLayout;
 import java.util.List;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.text.FlowView.FlowStrategy;
 import javax.swing.*;
 
 import simulator.control.Controller;
