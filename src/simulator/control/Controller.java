@@ -74,4 +74,8 @@ public class Controller {
 	public void addEvent(Event e) {
 		traffic_simulator.addEvent(e);
 	}
+	
+	public TrafficSimulator getTraffic_simulator() {
+		return traffic_simulator;
+	}
 }
