@@ -1,39 +1,40 @@
 package extra.jtable;
 
 import java.util.List;
-//import extra.jtable.*;
 
 import javax.swing.table.AbstractTableModel;
 
 import simulator.control.Controller;
 import simulator.model.Event;
+import simulator.model.Junction;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
 
-public class EventsTableModel extends AbstractTableModel implements TrafficSimObserver{
+public class JunctionsTableModel extends AbstractTableModel implements TrafficSimObserver{
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	
-	
-	private List<Event> _events;
-	private String[] _colNames = { "#", "Time", "Description	" };
-	private Controller _ctrl ;
+	private RoadMap _roadMap;
+	private Controller _ctrl;
+	private String[] _colNames = { "#", "ID" , "Green" , "Queues"};
 	Object[][] rowData;
 
-	
-
-	public EventsTableModel(Controller ctrl) {
+	public JunctionsTableModel(Controller ctrl) {
 		_ctrl=ctrl;
-		ctrl.addObserver(this);
-		setEventsList(_ctrl.getTraffic_simulator().get_events());
+		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
 			rowData[i][0]=i;
-			rowData[i][1]=_events.get(i).getTime();
-			rowData[i][2]=_events.get(i).toString();
+			rowData[i][1]= _roadMap.getJunctions().get(i).getId();
+			rowData[i][2]=_roadMap.getJunctions().get(i).getGreenLightIndex();
+			rowData[i][3]=_roadMap.getJunctions().get(i).getQueues();
 			
 		}
+		
 	}
+	
 
 	public void update() {
 		// observar que si no refresco la tabla no se carga
@@ -44,8 +45,8 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 		fireTableDataChanged();	
 	}
 	
-	public void setEventsList(List<Event> events) {
-		_events = events;
+	public void setRoadMap(RoadMap roadMap) {
+		_roadMap=roadMap;
 		update();
 	}
 
@@ -53,38 +54,24 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 	public boolean isCellEditable(int row, int column) {
 		return false;
 	}
-
-	//si no pongo esto no coge el nombre de las columnas
-	//
-	//this is for the column header
+	
 	@Override
 	public String getColumnName(int col) {
 		return _colNames[col];
 	}
-
 	@Override
-	// método obligatorio, probad a quitarlo, no compila
-	//
-	// this is for the number of columns
 	public int getColumnCount() {
+		// TODO Auto-generated method stub
 		return _colNames.length;
 	}
 
 	@Override
-	// método obligatorio
-	//
-	// the number of row, like those in the events list
 	public int getRowCount() {
-		return _events == null ? 0 : _events.size();
+		// TODO Auto-generated method stub
+		return _roadMap.getJunctions().size();
 	}
 
 	@Override
-	// método obligatorio
-	// así es como se va a cargar la tabla desde el ArrayList
-	// el índice del arrayList es el número de fila pq en este ejemplo
-	// quiero enumerarlos.
-	//
-	// returns the value of a particular cell 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object s = null;
 		switch (columnIndex) {
@@ -92,48 +79,57 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 			s = rowIndex;
 			break;
 		case 1:
-			s = _events.get(rowIndex).getTime();
+			s = _roadMap.getJunctions().get(rowIndex).getId();
 			break;
 		case 2:
-			s = _events.get(rowIndex).toString();
+			s = _roadMap.getJunctions().get(rowIndex).getGreenLightIndex();
 			break;
+		case 3:
+		s = _roadMap.getJunctions().get(rowIndex).getQueues();
+			break;
+	
 		}
 		return s;
 	}
 
+
 	@Override
 	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		setEventsList(events);
-		
+		setRoadMap(map);	
 	}
+
 
 	@Override
 	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
+		setRoadMap(map);	
 		
 	}
+
 
 	@Override
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		setEventsList(events);
+		setRoadMap(map);	
 		
 	}
+
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		setEventsList(events);
-		
+		setRoadMap(map);
 	}
+
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
-		setEventsList(events);
+		setRoadMap(map);
 		
 	}
+
 
 	@Override
 	public void onError(String err) {
 		// TODO Auto-generated method stub
 		
 	}
+
 }

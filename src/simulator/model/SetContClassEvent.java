@@ -2,6 +2,7 @@ package simulator.model;
 
 import java.util.List;
 
+
 import simulator.misc.Pair;
 
 public class SetContClassEvent extends Event {
@@ -33,8 +34,12 @@ public class SetContClassEvent extends Event {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+	
+
+		
+		
+		
+		return "Set ContClass"+cs.toArray();
 	}
 
 }

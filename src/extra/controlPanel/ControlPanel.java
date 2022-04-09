@@ -27,7 +27,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	private JFileChooser fc;
 
 
-	private boolean _stopped;
+	private boolean _stopped=false;
 
 	public ControlPanel(Controller controller) {
 		this._controller = controller;
@@ -67,6 +67,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		JButton load = new JButton();
 		load.addActionListener((e)->{
 			try {
+				_controller.reset();
 				loadFile();
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -86,8 +87,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 			
 			 try {
 				 ChangeCO2ClassDialog changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller);
-			        changeCO2ClassDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			        changeCO2ClassDialog.setVisible(true);
+			       changeCO2ClassDialog.open();
 			    } catch (Exception ex) {
 			        ex.printStackTrace();
 			    }
@@ -97,7 +97,15 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 		JButton weather = new JButton();
 		
-		weather.addActionListener(null);
+		weather.addActionListener((e)->{
+			
+			 try {
+				 ChangeWeatherDialog changeWeatherDialog = new ChangeWeatherDialog(_controller);
+			      changeWeatherDialog.open();
+			    } catch (Exception ex) {
+			        ex.printStackTrace();
+			    }
+		});
 		weather.setIcon(new ImageIcon("resources/icons/weather.png"));
 		toolBar.add(weather);
 
@@ -106,7 +114,10 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		// Run
 		JButton run = new JButton();
 		run.addActionListener((e)->{
+			_stopped=false;
 			run_sim(Integer.parseInt(userText.getText()));
+			
+			
 		});
 		
 		run.setIcon(new ImageIcon("resources/icons/run.png"));
@@ -126,7 +137,17 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 		toolBar.add(userText);
 		
-
+		// Stop
+		JButton exit = new JButton();
+		
+		exit.addActionListener((e)->{
+			 int result = JOptionPane.showConfirmDialog(null, "Exit?", "Confirm Exit",
+                     JOptionPane.OK_CANCEL_OPTION);
+             if (result == JOptionPane.OK_OPTION)
+                 System.exit(0);
+		});
+		exit.setIcon(new ImageIcon("resources/icons/exit.png"));
+		toolBar.add(exit);
 
 		return toolBar;
 	}
@@ -145,6 +166,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	
 	
 	private void run_sim(int n) {
+		System.out.println();
 		if (n > 0 && !_stopped) {
 			try {
 				_controller.run(1,System.out);

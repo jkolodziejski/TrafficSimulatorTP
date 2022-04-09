@@ -117,6 +117,7 @@ public class Vehicle extends SimulatedObject {
 			
 			//Problem
 			if(road != null || last_seen_junction!=0){
+				System.out.println("exit");
 				road.exit(this);
 			}
 			if (last_seen_junction+1 == itinerary.size()) {

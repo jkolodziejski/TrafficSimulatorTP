@@ -140,20 +140,8 @@ public class Main {
 	}
 	
 	private static void startGUIMode() throws IOException {
-		InputStream _in = new FileInputStream(_inFile);
-		 OutputStream out;
-		 if(_outFile != null) {
-			  out = new FileOutputStream(_outFile);
-			 
-		 }
-		 else {
-			out = System.out;
-		 }
 		 TrafficSimulator trafficSimulator = new TrafficSimulator();
 		 Controller controller = new Controller(trafficSimulator, _eventsFactory);
-		 controller.loadEvents(_in);
-		 _in.close();
-		 controller.run(_timeLimit, out);
 	
 		SwingUtilities.invokeLater(() -> new MainWindow(controller));
 		
@@ -191,7 +179,6 @@ public class Main {
 		default:
 			break;
 		}
-		startBatchMode();
 	}
 
 	// example command lines:

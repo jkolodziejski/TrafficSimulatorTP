@@ -34,7 +34,6 @@ public class NewVehicleEvent extends Event {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
 		return "New vehicle '"+id+"'";
 	}
 

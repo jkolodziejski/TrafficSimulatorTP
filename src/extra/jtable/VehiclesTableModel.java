@@ -9,29 +9,33 @@ import simulator.control.Controller;
 import simulator.model.Event;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
+import simulator.model.Vehicle;
 
-public class EventsTableModel extends AbstractTableModel implements TrafficSimObserver{
+public class VehiclesTableModel extends AbstractTableModel implements TrafficSimObserver {
 
 	private static final long serialVersionUID = 1L;
 	
 	
-	private List<Event> _events;
-	private String[] _colNames = { "#", "Time", "Description	" };
+	private RoadMap _roadMap;
+	private String[] _colNames = { "#", "ID", "Status", "itinerary", "CO2 class", "Max speed" , "Current speed" , "total CO2 " , "otal distance" };
 	private Controller _ctrl ;
 	Object[][] rowData;
 
 	
-
-	public EventsTableModel(Controller ctrl) {
+	public VehiclesTableModel(Controller ctrl) {
 		_ctrl=ctrl;
-		ctrl.addObserver(this);
-		setEventsList(_ctrl.getTraffic_simulator().get_events());
+		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
 			rowData[i][0]=i;
-			rowData[i][1]=_events.get(i).getTime();
-			rowData[i][2]=_events.get(i).toString();
-			
+			rowData[i][1]=_roadMap.getVehicles().get(i).getId();
+			rowData[i][2]=_roadMap.getVehicles().get(i).getStatus();
+			rowData[i][3]=_roadMap.getVehicles().get(i).getItinerary();
+			rowData[i][4]=_roadMap.getVehicles().get(i).getContClass();
+			rowData[i][5]=_roadMap.getVehicles().get(i).getMaxSpeed();
+			rowData[i][6]=_roadMap.getVehicles().get(i).getSpeed();
+			rowData[i][7]=_roadMap.getVehicles().get(i).getTotalCO2();
+			rowData[i][8]=_roadMap.getVehicles().get(i).getTotalTraveledDistance();
 		}
 	}
 
@@ -44,10 +48,12 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 		fireTableDataChanged();	
 	}
 	
-	public void setEventsList(List<Event> events) {
-		_events = events;
+	public void setRoadMap(RoadMap roadMap) {
+		_roadMap=roadMap;
 		update();
 	}
+	
+
 
 	@Override
 	public boolean isCellEditable(int row, int column) {
@@ -75,16 +81,10 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 	//
 	// the number of row, like those in the events list
 	public int getRowCount() {
-		return _events == null ? 0 : _events.size();
+		return _roadMap.getVehicles().size();
 	}
 
 	@Override
-	// método obligatorio
-	// así es como se va a cargar la tabla desde el ArrayList
-	// el índice del arrayList es el número de fila pq en este ejemplo
-	// quiero enumerarlos.
-	//
-	// returns the value of a particular cell 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object s = null;
 		switch (columnIndex) {
@@ -92,10 +92,28 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 			s = rowIndex;
 			break;
 		case 1:
-			s = _events.get(rowIndex).getTime();
+			s = _roadMap.getVehicles().get(rowIndex).getId();
 			break;
 		case 2:
-			s = _events.get(rowIndex).toString();
+			s = _roadMap.getVehicles().get(rowIndex).getStatus();
+			break;
+		case 3:
+		s = _roadMap.getVehicles().get(rowIndex).getItinerary();
+			break;
+		case 4:
+			s = _roadMap.getVehicles().get(rowIndex).getContClass();
+			break;
+		case 5:
+			s = _roadMap.getVehicles().get(rowIndex).getMaxSpeed();
+			break;
+		case 6:
+			s = _roadMap.getVehicles().get(rowIndex).getSpeed();
+			break;
+		case 7:
+			s = _roadMap.getVehicles().get(rowIndex).getTotalCO2();
+			break;
+		case 8:
+			s = _roadMap.getVehicles().get(rowIndex).getTotalTraveledDistance();
 			break;
 		}
 		return s;
@@ -103,31 +121,31 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 
 	@Override
 	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		setEventsList(events);
+		setRoadMap(map);
 		
 	}
 
 	@Override
 	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
+		setRoadMap(map);
 		
 	}
 
 	@Override
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		setEventsList(events);
+		setRoadMap(map);
 		
 	}
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		setEventsList(events);
+		setRoadMap(map);
 		
 	}
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
-		setEventsList(events);
+		setRoadMap(map);
 		
 	}
 
@@ -136,4 +154,7 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	
 }

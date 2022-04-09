@@ -37,7 +37,7 @@ public class Controller {
 			traffic_simulator.addEvent(events_factory.createInstance(events.getJSONObject(i)));
 			
 		}
-		
+	
 	}
 	
 
@@ -60,10 +60,10 @@ public class Controller {
 	}
 	
 	public void reset() {
-		traffic_simulator = new TrafficSimulator();
+		traffic_simulator.reset();
 	}
 	
-	public void addObserver(TrafficSimObserver o) { 
+	public void addObserver(TrafficSimObserver o) {
 		traffic_simulator.addObserver(o);
 	}
 	

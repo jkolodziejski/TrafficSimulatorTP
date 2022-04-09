@@ -7,22 +7,23 @@ import javax.swing.*;
 import extra.controlPanel.ControlPanel;
 import extra.controlPanel.StatusBar;
 import extra.jtable.EventsTableModel;
+import extra.jtable.JunctionsTableModel;
+import extra.jtable.RoadTableModel;
+import extra.jtable.VehiclesTableModel;
 import simulator.control.Controller;
-import simulator.model.Event;
-import simulator.model.RoadMap;
-import simulator.model.TrafficSimObserver;
 
-public class MainWindow extends JFrame implements TrafficSimObserver {
+
+public class MainWindow extends JFrame  {
 
 	private static final long serialVersionUID = 1L; // only so the warning for MainWindow disappeared
 
 	private Controller _ctrl;
+	JPanel eventsView;
 
 	public MainWindow(Controller ctrl) {
 		super("Traffic Simulator");
 		_ctrl = ctrl;
 		initGUI();
-		_ctrl.addObserver(this);
 	}
 
 	private void initGUI() {
@@ -44,21 +45,32 @@ public class MainWindow extends JFrame implements TrafficSimObserver {
 		viewsPanel.add(mapsPanel);
 
 		// tables
-		JPanel eventsView = createViewPanel(new JTable(new EventsTableModel(_ctrl)), "Events");
+		eventsView = createViewPanel(new JTable(new EventsTableModel(_ctrl)), "Events");
 		eventsView.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(eventsView);
-//		tablesPanel.add(vehiclesView);
-//		tablesPanel.add(roadsView);
-//		tablesPanel.add(junctionsView);
-		// TODO add other tables
-		// ...
+		
+		
+		JPanel vehiclesView = createViewPanel(new JTable(new VehiclesTableModel(_ctrl)), "Vehicles");
+		eventsView.setPreferredSize(new Dimension(500, 200));
+		tablesPanel.add(vehiclesView);
+		
+		JPanel roadsView = createViewPanel(new JTable(new RoadTableModel(_ctrl)), "Vehicles");
+		roadsView.setPreferredSize(new Dimension(500, 200));
+		tablesPanel.add(roadsView);
+		
+		JPanel junctionsView = createViewPanel(new JTable(new JunctionsTableModel(_ctrl)), "Vehicles");
+		junctionsView.setPreferredSize(new Dimension(500, 200));
+		tablesPanel.add(junctionsView);
 
 		// maps
 		JPanel mapView = createViewPanel(new MapComponent(_ctrl), "Map");
 		mapView.setPreferredSize(new Dimension(500, 400));
 		mapsPanel.add(mapView);
-		// TODO add a map for MapByRoadComponent
-		// ...
+		
+		
+		JPanel roadView = createViewPanel(new MapByRoadComponent(_ctrl), "Map");
+		roadView.setPreferredSize(new Dimension(500, 400));
+		mapsPanel.add(roadView);
 
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		this.pack();
@@ -72,39 +84,5 @@ public class MainWindow extends JFrame implements TrafficSimObserver {
 		return p;
 	}
 
-	@Override
-	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onReset(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onRegister(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onError(String err) {
-		// TODO Auto-generated method stub
-
-	}
+	
 }

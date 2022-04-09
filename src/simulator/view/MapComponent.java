@@ -41,7 +41,7 @@ public class MapComponent extends JPanel implements TrafficSimObserver {
 
 	MapComponent(Controller ctrl) {
 		initGUI();
-		//ctrl.addObserver(this);
+		ctrl.addObserver(this);
 	}
 
 	private void initGUI() {
@@ -98,6 +98,7 @@ public class MapComponent extends JPanel implements TrafficSimObserver {
 
 			// draw line from (x1,y1) to (x2,y2) with arrow of color arrowColor and line of
 			// color roadColor. The size of the arrow is 15px length and 5 px width
+			
 			drawLineWithArrow(g, x1, y1, x2, y2, 15, 5, roadColor, arrowColor);
 		}
 
@@ -108,7 +109,7 @@ public class MapComponent extends JPanel implements TrafficSimObserver {
 			if (v.getStatus() != VehicleStatus.ARRIVED) {
 
 				Road r = v.getRoad();
-	
+				
 				
 				// The calculation below compute the coordinate (vX,vY) of the vehicle on the
 				// corresponding road. It is calculated relatively to the length of the road, and

@@ -21,7 +21,7 @@ public abstract class Road extends SimulatedObject{
 		if(maxSpeed>0) {
 			this.maxSpeed = maxSpeed;
 			this.current_speed_limit=maxSpeed;
-		
+
 		}else  {
 		throw new IllegalArgumentException("Max speed is not positive number");
 		}

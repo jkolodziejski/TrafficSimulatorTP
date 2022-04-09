@@ -1,52 +1,123 @@
 package extra.controlPanel;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.text.html.CSS;
 
 import simulator.control.Controller;
+import simulator.factories.NewVehicleEventBuilder;
+import simulator.misc.Pair;
+import simulator.model.NewInterCityRoadEvent;import simulator.model.NewVehicleEvent;
+import simulator.model.SetContClassEvent;
+import simulator.model.Weather;
 
 public class ChangeCO2ClassDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 
 	
-	String names[];
-	JComboBox<String> list;
-	Controller _ctrl;
+	protected String vehicles[];
+	protected JComboBox<String> vehiclelist;
+	protected JComboBox<Integer> co2classlist;
+	protected Controller _ctrl;
+	protected int _status;
 	
 	public ChangeCO2ClassDialog (Controller ctrl) {
 		
 		_ctrl=ctrl;
 		initGui();
+		
+		
 	}
 	
 	private void initGui() {
-		JPanel mainPanel = new JPanel(new BorderLayout(10,10));
+		setTitle("Change CO2 Class");
+		
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		JPanel viewPanel = new JPanel();
+		mainPanel.add(viewPanel, BorderLayout.CENTER);
+		
 		mainPanel.add(new JLabel("Schedule an event to change the CO2 class of a vehicle after a given number of simulation"
 				+ "ticks from now."),BorderLayout.PAGE_START);
-		names = new String[_ctrl.getTraffic_simulator().get_roadMap().getVehicles().size()];
-		for (int i = 0; i < names.length; i++)
-			names[i] = _ctrl.getTraffic_simulator().get_roadMap().getVehicles().get(i).getId();
-		JComboBox<String> list = new JComboBox<String>(names);
-		mainPanel.add(list, BorderLayout.CENTER);
-		list.setSelectedIndex(0);
-		/*
-		list.addActionListener(this);
+		
+		vehicles = new String[_ctrl.getTraffic_simulator().get_roadMap().getVehicles().size()];
+		for (int i = 0; i < vehicles.length; i++)
+			vehicles[i] = _ctrl.getTraffic_simulator().get_roadMap().getVehicles().get(i).getId();
+		vehiclelist = new JComboBox<String>(vehicles);
+		viewPanel.add(new JLabel(" Vehicle: "));
+		viewPanel.add(vehiclelist);
+		viewPanel.add(new JLabel(" C02 Class: "));
+		co2classlist = new JComboBox<Integer>( new Integer[] { 0,1,2,3,4,5,6,7,8,9,10} );
+		co2classlist.setSelectedIndex(0);
+		viewPanel.add(co2classlist);
+		
+		viewPanel.add(new JLabel("Ticks: ") );
+		JTextField userText = new JTextField();
+		userText.setHorizontalAlignment(JTextField.RIGHT);
+		userText.setPreferredSize(new Dimension(50,25));
+		viewPanel.add(userText);
+		
+		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
+		
+		
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.addActionListener(new ActionListener() {
 
-		this.add(new JLabel("Select a dialog"));
-		mainPanel.add(list);
-		mainPanel.setOpaque(true);
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				_status = 0;
+				ChangeCO2ClassDialog.this.setVisible(false);
+			}
+		});
+		buttonsPanel.add(cancelButton);
 
-		this.setContentPane(mainPanel);
-		*/
-		this.add(mainPanel);
-		this.pack();
-		this.setVisible(true);
+		JButton OKButton = new JButton("OK");
+		OKButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				_status = 1;
+				ChangeCO2ClassDialog.this.setVisible(false);
+				Pair<String, Integer> c = new Pair<>(vehiclelist.getSelectedItem().toString(), co2classlist.getSelectedIndex());
+				List<Pair<String, Integer>> cs = new ArrayList<>();
+				cs.add(c);
+				
+				SetContClassEvent newEvent = new SetContClassEvent(_ctrl.getTraffic_simulator().get_time()+Integer.parseInt(userText.getText()), cs); 
+				_ctrl.addEvent(newEvent);
+			}
+		});
+		buttonsPanel.add(OKButton);
+		
+
+		mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
+		
+		setContentPane(mainPanel);
+		setMinimumSize(new Dimension(100, 100));
+		setVisible(false);
+		
 
 	}
+	
+	
+	public int open() {
+		setLocation(getParent().getLocation().x + 50, getParent().getLocation().y + 50);
+		pack();
+		setVisible(true);
+		return _status;
+	}
+
 
 }
