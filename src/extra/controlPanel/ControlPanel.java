@@ -1,6 +1,7 @@
 package extra.controlPanel;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Dimension;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	private void initGUI() {
 
-		this.setLayout(new BorderLayout());
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		this.add(createJToolBar());
 		
@@ -62,8 +63,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 		JTextField userText = new JTextField();
 		userText.setHorizontalAlignment(JTextField.RIGHT);
-		userText.setMaximumSize(new Dimension(50,100));
-
+		userText.setPreferredSize(new Dimension(50,40));
+		userText.setText("10");
 		JButton load = new JButton();
 		load.addActionListener((e)->{
 			try {
@@ -137,7 +138,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 		toolBar.add(userText);
 		
-		// Stop
+		// Exit
+		
 		JButton exit = new JButton();
 		
 		exit.addActionListener((e)->{

@@ -3,6 +3,8 @@ package simulator.view;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 import extra.controlPanel.ControlPanel;
 import extra.controlPanel.StatusBar;
@@ -79,6 +81,10 @@ public class MainWindow extends JFrame  {
 
 	private JPanel createViewPanel(JComponent c, String title) {
 		JPanel p = new JPanel(new BorderLayout());
+		
+		Border blackline = BorderFactory.createLineBorder(Color.black,2);
+		TitledBorder titled = BorderFactory.createTitledBorder(blackline, "title");
+		p.setBorder(titled);
 		// TODO add a framed border to p with title
 		p.add(new JScrollPane(c));
 		return p;

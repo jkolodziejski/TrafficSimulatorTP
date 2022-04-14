@@ -10,6 +10,7 @@ import simulator.model.Event;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
 import simulator.model.Vehicle;
+import simulator.model.VehicleStatus;
 
 public class VehiclesTableModel extends AbstractTableModel implements TrafficSimObserver {
 
@@ -17,7 +18,7 @@ public class VehiclesTableModel extends AbstractTableModel implements TrafficSim
 	
 	
 	private RoadMap _roadMap;
-	private String[] _colNames = { "#", "ID", "Status", "itinerary", "CO2 class", "Max speed" , "Current speed" , "total CO2 " , "otal distance" };
+	private String[] _colNames = { "ID", "Status", "itinerary", "CO2 class", "Max speed" , "Speed" , "total CO2 " , "otal distance" };
 	private Controller _ctrl ;
 	Object[][] rowData;
 
@@ -27,15 +28,14 @@ public class VehiclesTableModel extends AbstractTableModel implements TrafficSim
 		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=i;
-			rowData[i][1]=_roadMap.getVehicles().get(i).getId();
-			rowData[i][2]=_roadMap.getVehicles().get(i).getStatus();
-			rowData[i][3]=_roadMap.getVehicles().get(i).getItinerary();
-			rowData[i][4]=_roadMap.getVehicles().get(i).getContClass();
-			rowData[i][5]=_roadMap.getVehicles().get(i).getMaxSpeed();
-			rowData[i][6]=_roadMap.getVehicles().get(i).getSpeed();
-			rowData[i][7]=_roadMap.getVehicles().get(i).getTotalCO2();
-			rowData[i][8]=_roadMap.getVehicles().get(i).getTotalTraveledDistance();
+			rowData[i][0]=_roadMap.getVehicles().get(i).getId();
+			rowData[i][1]=_roadMap.getVehicles().get(i).getStatus();
+			rowData[i][2]=_roadMap.getVehicles().get(i).getItinerary();
+			rowData[i][3]=_roadMap.getVehicles().get(i).getContClass();
+			rowData[i][4]=_roadMap.getVehicles().get(i).getMaxSpeed();
+			rowData[i][5]=_roadMap.getVehicles().get(i).getSpeed();
+			rowData[i][6]=_roadMap.getVehicles().get(i).getTotalCO2();
+			rowData[i][7]=_roadMap.getVehicles().get(i).getTotalTraveledDistance();
 		}
 	}
 
@@ -89,30 +89,43 @@ public class VehiclesTableModel extends AbstractTableModel implements TrafficSim
 		Object s = null;
 		switch (columnIndex) {
 		case 0:
-			s = rowIndex;
-			break;
-		case 1:
 			s = _roadMap.getVehicles().get(rowIndex).getId();
 			break;
-		case 2:
-			s = _roadMap.getVehicles().get(rowIndex).getStatus();
+		case 1:
+			VehicleStatus status =  _roadMap.getVehicles().get(rowIndex).getStatus();
+			switch (status) {
+			case PENDING:
+				s="Pending";
+				break;
+			case TRAVELING:
+				s=_roadMap.getVehicles().get(rowIndex).getRoad();
+				s+=":"+_roadMap.getVehicles().get(rowIndex).getLocation();
+				break;
+			case WAITING:
+				s="Waiting:"+_roadMap.getVehicles().get(rowIndex).getItinerary().get(_roadMap.getVehicles().get(rowIndex).getLast_seen_junction());
+				break;
+			case ARRIVED:
+				s="Arrived";
+				break;
+			}
+			
 			break;
-		case 3:
+		case 2:
 		s = _roadMap.getVehicles().get(rowIndex).getItinerary();
 			break;
-		case 4:
+		case 3:
 			s = _roadMap.getVehicles().get(rowIndex).getContClass();
 			break;
-		case 5:
+		case 4:
 			s = _roadMap.getVehicles().get(rowIndex).getMaxSpeed();
 			break;
-		case 6:
+		case 5:
 			s = _roadMap.getVehicles().get(rowIndex).getSpeed();
 			break;
-		case 7:
+		case 6:
 			s = _roadMap.getVehicles().get(rowIndex).getTotalCO2();
 			break;
-		case 8:
+		case 7:
 			s = _roadMap.getVehicles().get(rowIndex).getTotalTraveledDistance();
 			break;
 		}

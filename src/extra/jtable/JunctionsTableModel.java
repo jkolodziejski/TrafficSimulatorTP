@@ -9,6 +9,7 @@ import simulator.model.Event;
 import simulator.model.Junction;
 import simulator.model.RoadMap;
 import simulator.model.TrafficSimObserver;
+import simulator.model.Vehicle;
 
 public class JunctionsTableModel extends AbstractTableModel implements TrafficSimObserver{
 
@@ -18,7 +19,7 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 	private static final long serialVersionUID = 1L;
 	private RoadMap _roadMap;
 	private Controller _ctrl;
-	private String[] _colNames = { "#", "ID" , "Green" , "Queues"};
+	private String[] _colNames = { "ID" , "Green" , "Queues"};
 	Object[][] rowData;
 
 	public JunctionsTableModel(Controller ctrl) {
@@ -26,10 +27,17 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=i;
-			rowData[i][1]= _roadMap.getJunctions().get(i).getId();
-			rowData[i][2]=_roadMap.getJunctions().get(i).getGreenLightIndex();
-			rowData[i][3]=_roadMap.getJunctions().get(i).getQueues();
+			rowData[i][0]= _roadMap.getJunctions().get(i).getId();
+			int which_green = _roadMap.getJunctions().get(i).getGreenLightIndex();
+			if(which_green==-1) {
+				rowData[i][1]= "NONE";
+			}
+			else
+			{
+				rowData[i][1]=_roadMap.getJunctions().get(i).getInRoads().get(which_green).getId();
+				}
+			
+			rowData[i][2]=_roadMap.getJunctions().get(i).getQueues();
 			
 		}
 		
@@ -76,16 +84,35 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 		Object s = null;
 		switch (columnIndex) {
 		case 0:
-			s = rowIndex;
-			break;
-		case 1:
 			s = _roadMap.getJunctions().get(rowIndex).getId();
 			break;
-		case 2:
-			s = _roadMap.getJunctions().get(rowIndex).getGreenLightIndex();
+		case 1:
+			int which_green = _roadMap.getJunctions().get(rowIndex).getGreenLightIndex();
+			if(which_green==-1) {
+				s= "NONE";
+			}
+			else
+			{
+				s=_roadMap.getJunctions().get(rowIndex).getInRoads().get(which_green).getId();
+				}
+			
 			break;
-		case 3:
-		s = _roadMap.getJunctions().get(rowIndex).getQueues();
+		case 2:
+			List<List<Vehicle>> queues = _roadMap.getJunctions().get(rowIndex).getQueues();
+			if(queues.size()==0) {
+				s="";
+			}
+			else {
+				int which=0;
+				s="";
+				for (List<Vehicle> queue : queues) {
+					s+=_roadMap.getJunctions().get(rowIndex).getInRoads().get(which).getId();
+					s+=":";
+					s+=queue.toString();
+					which++;
+				}
+			}
+		
 			break;
 	
 		}

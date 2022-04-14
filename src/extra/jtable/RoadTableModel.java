@@ -17,7 +17,7 @@ public class RoadTableModel extends AbstractTableModel implements TrafficSimObse
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String[] _colNames = { "#", "ID", "length","weather","Max speed","Current speed","total CO2","CO2 limit" };
+	private String[] _colNames = { "ID", "length","weather","Max speed","Current speed","total CO2","CO2 limit" };
 	private Controller _ctrl ;
 	Object[][] rowData;
 	private RoadMap _roadMap;
@@ -27,14 +27,13 @@ public class RoadTableModel extends AbstractTableModel implements TrafficSimObse
 		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=i;
-			rowData[i][1]=_roadMap.getRoads().get(i).getId();
-			rowData[i][2]=_roadMap.getRoads().get(i).getLength();
-			rowData[i][3]=_roadMap.getRoads().get(i).getWeather();
-			rowData[i][4]=_roadMap.getRoads().get(i).getMaxSpeed();
-			rowData[i][5]=_roadMap.getRoads().get(i).getSpeedLimit();
-			rowData[i][6]=_roadMap.getRoads().get(i).getTotalCO2();
-			rowData[i][7]=_roadMap.getRoads().get(i).getContLimit();
+			rowData[i][0]=_roadMap.getRoads().get(i).getId();
+			rowData[i][1]=_roadMap.getRoads().get(i).getLength();
+			rowData[i][2]=_roadMap.getRoads().get(i).getWeather();
+			rowData[i][3]=_roadMap.getRoads().get(i).getMaxSpeed();
+			rowData[i][4]=_roadMap.getRoads().get(i).getSpeedLimit();
+			rowData[i][5]=_roadMap.getRoads().get(i).getTotalCO2();
+			rowData[i][6]=_roadMap.getRoads().get(i).getContLimit();
 		}
 		
 		// TODO Auto-generated constructor stub
@@ -81,28 +80,24 @@ public class RoadTableModel extends AbstractTableModel implements TrafficSimObse
 		Object s = null;
 		switch (columnIndex) {
 		case 0:
-			s = rowIndex;
-			break;
-		case 1:
 			s = _roadMap.getRoads().get(rowIndex).getId();
 			break;
-		case 2:
+		case 1:
 			s = _roadMap.getRoads().get(rowIndex).getLength();
 			break;
-		case 3:
+		case 2:
 		s = _roadMap.getRoads().get(rowIndex).getWeather();
 			break;
-		case 4:
+		case 3:
 			s = _roadMap.getRoads().get(rowIndex).getMaxSpeed();
 			break;
-		case 5:
-			
+		case 4:
 			s = _roadMap.getRoads().get(rowIndex).getSpeedLimit();
 			break;
-		case 6:
+		case 5:
 			s = _roadMap.getRoads().get(rowIndex).getTotalCO2();
 			break;
-		case 7:
+		case 6:
 			s = _roadMap.getRoads().get(rowIndex).getContLimit();
 			break;
 	

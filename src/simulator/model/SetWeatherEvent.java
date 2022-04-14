@@ -29,8 +29,22 @@ public class SetWeatherEvent extends Event {
 
 	@Override
 	public String toString() {
+		int which=0;
+		String wsString="[";
+		for(Pair<String, Weather> c : ws) {
+			if(which!=0) {
+			wsString+=",";
+			}
+			wsString+="(";
+			wsString+=c.getFirst();
+			wsString+=",";
+			wsString+=c.getSecond().toString();
+			wsString+=")";
+			which++;
+		}
+		wsString+="]";
 		
-		return "Set weather";
+		return "Set weather"+wsString;
 	}
 
 }

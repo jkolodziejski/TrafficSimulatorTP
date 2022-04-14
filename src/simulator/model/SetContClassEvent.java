@@ -27,19 +27,31 @@ public class SetContClassEvent extends Event {
 			}else {
 				
 				vehicle.setContClass(p_cs.getSecond());
-			}
+			}	
 		
 		}
 	}
 
 	@Override
 	public String toString() {
-	
-
 		
+		int which=0;
+		String csString="[";
+		for(Pair<String, Integer> c : cs) {
+			if(which!=0) {
+				csString+=",";
+				}
+			csString+="(";
+			csString+=c.getFirst();
+			csString+=",";
+			csString+=c.getSecond().toString();
+			csString+=")";
+			which++;
+			
+		}
+		csString+="]";
 		
-		
-		return "Set ContClass"+cs.toArray();
+		return "Set ContClass"+csString;
 	}
 
 }

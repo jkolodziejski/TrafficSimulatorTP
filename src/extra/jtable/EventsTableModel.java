@@ -16,7 +16,7 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 	
 	
 	private List<Event> _events;
-	private String[] _colNames = { "#", "Time", "Description	" };
+	private String[] _colNames = { "Time", "Description" };
 	private Controller _ctrl ;
 	Object[][] rowData;
 
@@ -28,9 +28,8 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 		setEventsList(_ctrl.getTraffic_simulator().get_events());
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=i;
-			rowData[i][1]=_events.get(i).getTime();
-			rowData[i][2]=_events.get(i).toString();
+			rowData[i][0]=_events.get(i).getTime();
+			rowData[i][1]=_events.get(i).toString();
 			
 		}
 	}
@@ -89,12 +88,9 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 		Object s = null;
 		switch (columnIndex) {
 		case 0:
-			s = rowIndex;
-			break;
-		case 1:
 			s = _events.get(rowIndex).getTime();
 			break;
-		case 2:
+		case 1:
 			s = _events.get(rowIndex).toString();
 			break;
 		}

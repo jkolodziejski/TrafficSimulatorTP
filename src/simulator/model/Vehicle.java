@@ -186,7 +186,9 @@ public class Vehicle extends SimulatedObject {
 
 	
 	
-
+	public int getLast_seen_junction() {
+		return last_seen_junction;
+	}
 	
 
 	

@@ -1,21 +1,17 @@
 package extra.controlPanel;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
+
+import java.awt.FlowLayout;
+
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
+
 import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
+
 
 import simulator.control.Controller;
 import simulator.model.Event;
@@ -44,7 +40,7 @@ public class StatusBar extends JPanel implements TrafficSimObserver {
 	
 
 	private void initGui() {
-		this.setLayout(new FlowLayout());
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		txt = new JLabel();
 		Jtime = new JLabel();
 		this.add(new JLabel("Time : "));
