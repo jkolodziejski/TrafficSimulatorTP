@@ -15,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import simulator.control.Controller;
 import simulator.misc.Pair;
@@ -42,6 +44,12 @@ public class ChangeWeatherDialog extends JDialog {
 	private void initGui() {
 		setTitle("Change CO2 Class");
 		
+		
+		JSpinner _ticksSpinner = new JSpinner(new SpinnerNumberModel(10,1,999999,1));
+		_ticksSpinner.setMaximumSize(new Dimension(80, 30));
+		_ticksSpinner.setMinimumSize(new Dimension(200, 40));
+		_ticksSpinner.setPreferredSize(new Dimension(80, 30));
+		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		JPanel viewPanel = new JPanel();
 		mainPanel.add(viewPanel, BorderLayout.CENTER);
@@ -61,10 +69,8 @@ public class ChangeWeatherDialog extends JDialog {
 		viewPanel.add(weatherlist);
 		
 		viewPanel.add(new JLabel("Ticks: ") );
-		JTextField userText = new JTextField();
-		userText.setHorizontalAlignment(JTextField.RIGHT);
-		userText.setPreferredSize(new Dimension(50,25));
-		viewPanel.add(userText);
+		
+		viewPanel.add(_ticksSpinner);
 		
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
@@ -93,7 +99,7 @@ public class ChangeWeatherDialog extends JDialog {
 				List<Pair<String, Weather>> cs = new ArrayList<>();
 				cs.add(c);
 				
-				SetWeatherEvent newEvent = new SetWeatherEvent(_ctrl.getTraffic_simulator().get_time()+Integer.parseInt(userText.getText()), cs); 
+				SetWeatherEvent newEvent = new SetWeatherEvent(_ctrl.getTraffic_simulator().get_time()+((int) _ticksSpinner.getValue()), cs); 
 				_ctrl.addEvent(newEvent);
 			}
 		});

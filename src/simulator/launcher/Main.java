@@ -27,7 +27,7 @@ import simulator.view.MainWindow;
 public class Main {
 
 	enum ExeMode{GUI, BATCH};
-	private static ExeMode _mode = ExeMode.GUI;
+	private static ExeMode _mode ;
 	
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static String _inFile = null;
@@ -46,10 +46,12 @@ public class Main {
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine line = parser.parse(cmdLineOptions, args);
+			ConsoleOption(line);
 			parseHelpOption(line, cmdLineOptions);
 			parseInFileOption(line);
 			parseOutFileOption(line);
 			TicksSimulator(line);
+			
 
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
@@ -71,10 +73,10 @@ public class Main {
 
 	private static Options buildOptions() {
 		Options cmdLineOptions = new Options();
-
+		
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Console").build());
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("Events input file").build());
-		cmdLineOptions.addOption(
-				Option.builder("o").longOpt("output").hasArg().desc("Output file, where reports are written.").build());
+		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Output file, where reports are written.").build());
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
 		cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg().desc("Ticks to the simulator’s main loop (default\n"
 				+ "value is 10).").build());
@@ -93,13 +95,18 @@ public class Main {
 
 	private static void parseInFileOption(CommandLine line) throws ParseException {
 		_inFile = line.getOptionValue("i");
-		if (_inFile == null) {
+		if (_inFile == null && _mode == ExeMode.BATCH) {
 			throw new ParseException("An events file is missing");
+		}
+		else {
+			_inFile=null;
 		}
 	}
 
 	private static void parseOutFileOption(CommandLine line) throws ParseException {
+		if(_mode != ExeMode.GUI) {
 		_outFile = line.getOptionValue("o");
+		}
 	}
 	
 	private static void TicksSimulator(CommandLine line) throws ParseException {
@@ -107,6 +114,15 @@ public class Main {
 			_timeLimit = Integer.parseInt(line.getOptionValue("t"));
 		}else {
 			_timeLimit=_timeLimitDefaultValue;
+		}
+	}
+	
+	private static void ConsoleOption(CommandLine line) throws ParseException {
+		if(line.getOptionValue("m") == null || line.getOptionValue("m") == "gui") {
+			_mode = ExeMode.GUI;
+			
+		}else {
+			_mode=ExeMode.BATCH;
 		}
 	}
 		

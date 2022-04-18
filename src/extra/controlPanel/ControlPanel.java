@@ -56,15 +56,18 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	
 	
 	public JToolBar createJToolBar() {
+		
+		JSpinner _ticksSpinner = new JSpinner(new SpinnerNumberModel(10,1,999999,1));
+		_ticksSpinner.setMaximumSize(new Dimension(80, 30));
+		_ticksSpinner.setMinimumSize(new Dimension(200, 40));
+		_ticksSpinner.setPreferredSize(new Dimension(80, 30));
+		
 		JToolBar toolBar = new JToolBar();
 		
 		
 		JLabel label = new JLabel(" Ticks: ", JLabel.LEFT);
 		
-		JTextField userText = new JTextField();
-		userText.setHorizontalAlignment(JTextField.RIGHT);
-		userText.setPreferredSize(new Dimension(50,40));
-		userText.setText("10");
+
 		JButton load = new JButton();
 		load.addActionListener((e)->{
 			try {
@@ -116,7 +119,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		JButton run = new JButton();
 		run.addActionListener((e)->{
 			_stopped=false;
-			run_sim(Integer.parseInt(userText.getText()));
+			run_sim((int) _ticksSpinner.getValue());
+			
 			
 			
 		});
@@ -136,12 +140,12 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 		toolBar.add(label);
 		
-		toolBar.add(userText);
+		toolBar.add(_ticksSpinner);
 		
 		// Exit
 		
 		JButton exit = new JButton();
-		
+		exit.setAlignmentX(LEFT_ALIGNMENT);
 		exit.addActionListener((e)->{
 			 int result = JOptionPane.showConfirmDialog(null, "Exit?", "Confirm Exit",
                      JOptionPane.OK_CANCEL_OPTION);

@@ -13,7 +13,9 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.text.html.CSS;
 
 import simulator.control.Controller;
@@ -45,6 +47,12 @@ public class ChangeCO2ClassDialog extends JDialog {
 	private void initGui() {
 		setTitle("Change CO2 Class");
 		
+		
+		JSpinner _ticksSpinner = new JSpinner(new SpinnerNumberModel(10,1,999999,1));
+		_ticksSpinner.setMaximumSize(new Dimension(80, 30));
+		_ticksSpinner.setMinimumSize(new Dimension(200, 40));
+		_ticksSpinner.setPreferredSize(new Dimension(80, 30));
+		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		JPanel viewPanel = new JPanel();
 		mainPanel.add(viewPanel, BorderLayout.CENTER);
@@ -64,10 +72,7 @@ public class ChangeCO2ClassDialog extends JDialog {
 		viewPanel.add(co2classlist);
 		
 		viewPanel.add(new JLabel("Ticks: ") );
-		JTextField userText = new JTextField();
-		userText.setHorizontalAlignment(JTextField.RIGHT);
-		userText.setPreferredSize(new Dimension(50,25));
-		viewPanel.add(userText);
+		viewPanel.add(_ticksSpinner);
 		
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
@@ -95,7 +100,7 @@ public class ChangeCO2ClassDialog extends JDialog {
 				List<Pair<String, Integer>> cs = new ArrayList<>();
 				cs.add(c);
 				
-				SetContClassEvent newEvent = new SetContClassEvent(_ctrl.getTraffic_simulator().get_time()+Integer.parseInt(userText.getText()), cs); 
+				SetContClassEvent newEvent = new SetContClassEvent(_ctrl.getTraffic_simulator().get_time()+((int) _ticksSpinner.getValue()), cs); 
 				_ctrl.addEvent(newEvent);
 			}
 		});
