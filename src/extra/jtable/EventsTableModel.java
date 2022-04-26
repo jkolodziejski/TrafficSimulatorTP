@@ -25,7 +25,6 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 	public EventsTableModel(Controller ctrl) {
 		_ctrl=ctrl;
 		ctrl.addObserver(this);
-		setEventsList(_ctrl.getTraffic_simulator().get_events());
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
 			rowData[i][0]=_events.get(i).getTime();

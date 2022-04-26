@@ -1,4 +1,4 @@
-package extra.controlPanel;
+package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -21,6 +22,7 @@ import javax.swing.SpinnerNumberModel;
 
 import simulator.control.Controller;
 import simulator.misc.Pair;
+import simulator.model.RoadMap;
 import simulator.model.SetContClassEvent;
 import simulator.model.SetWeatherEvent;
 import simulator.model.Weather;
@@ -34,9 +36,14 @@ public class ChangeWeatherDialog extends JDialog {
 	protected JComboBox<Weather> weatherlist;
 	protected Controller _ctrl;
 	protected int _status;
+	protected RoadMap _roadMap;
+	protected int _time;
 	
-	public ChangeWeatherDialog(Controller ctrl) {
+	public ChangeWeatherDialog(Controller ctrl, RoadMap roadMap , int time) {
 		_ctrl=ctrl;
+		_roadMap = roadMap;
+		_time = time;
+		
 		initGui();
 		
 	}
@@ -57,9 +64,9 @@ public class ChangeWeatherDialog extends JDialog {
 		mainPanel.add(new JLabel("Schedule an event to change the Weather of a road after a given number of simulation"
 				+ "ticks from now."),BorderLayout.PAGE_START);
 		
-		vehicles = new String[_ctrl.getTraffic_simulator().get_roadMap().getRoads().size()];
+		vehicles = new String[_roadMap.getRoads().size()];
 		for (int i = 0; i < vehicles.length; i++)
-			vehicles[i] = _ctrl.getTraffic_simulator().get_roadMap().getRoads().get(i).getId();
+			vehicles[i] = _roadMap.getRoads().get(i).getId();
 		roadlist = new JComboBox<String>(vehicles);
 		viewPanel.add(new JLabel(" Road: "));
 		viewPanel.add(roadlist);
@@ -99,8 +106,12 @@ public class ChangeWeatherDialog extends JDialog {
 				List<Pair<String, Weather>> cs = new ArrayList<>();
 				cs.add(c);
 				
-				SetWeatherEvent newEvent = new SetWeatherEvent(_ctrl.getTraffic_simulator().get_time()+((int) _ticksSpinner.getValue()), cs); 
+				SetWeatherEvent newEvent = new SetWeatherEvent(_time+((int) _ticksSpinner.getValue()), cs); 
+				try {
 				_ctrl.addEvent(newEvent);
+				}catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Error run",e1.getMessage(), JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		buttonsPanel.add(OKButton);
@@ -113,6 +124,14 @@ public class ChangeWeatherDialog extends JDialog {
 		setVisible(false);
 		
 
+	}
+	
+	public void set_roadMap(RoadMap _roadMap) {
+		this._roadMap = _roadMap;
+	}
+	
+	public void set_time(int _time) {
+		this._time = _time;
 	}
 	
 	

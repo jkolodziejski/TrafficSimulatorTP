@@ -27,17 +27,18 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]= _roadMap.getJunctions().get(i).getId();
-			int which_green = _roadMap.getJunctions().get(i).getGreenLightIndex();
+			Junction junction = _roadMap.getJunctions().get(i);
+			rowData[i][0]=junction.getId();
+			int which_green = junction.getGreenLightIndex();
 			if(which_green==-1) {
 				rowData[i][1]= "NONE";
 			}
 			else
 			{
-				rowData[i][1]=_roadMap.getJunctions().get(i).getInRoads().get(which_green).getId();
+				rowData[i][1]=junction.getInRoads().get(which_green).getId();
 				}
 			
-			rowData[i][2]=_roadMap.getJunctions().get(i).getQueues();
+			rowData[i][2]=junction.getQueues();
 			
 		}
 		

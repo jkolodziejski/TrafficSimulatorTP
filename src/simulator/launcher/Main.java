@@ -118,6 +118,7 @@ public class Main {
 	}
 	
 	private static void ConsoleOption(CommandLine line) throws ParseException {
+		
 		if(line.getOptionValue("m") == null || line.getOptionValue("m") == "gui") {
 			_mode = ExeMode.GUI;
 			
@@ -158,6 +159,10 @@ public class Main {
 	private static void startGUIMode() throws IOException {
 		 TrafficSimulator trafficSimulator = new TrafficSimulator();
 		 Controller controller = new Controller(trafficSimulator, _eventsFactory);
+		 if(_inFile != null) {
+			 InputStream _in = new FileInputStream(_inFile);
+			 controller.loadEvents(_in);
+		 }
 	
 		SwingUtilities.invokeLater(() -> new MainWindow(controller));
 		

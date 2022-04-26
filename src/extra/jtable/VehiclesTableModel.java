@@ -28,14 +28,15 @@ public class VehiclesTableModel extends AbstractTableModel implements TrafficSim
 		_ctrl.addObserver(this);
 		rowData = new Object[getRowCount()][_colNames.length];
 		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=_roadMap.getVehicles().get(i).getId();
-			rowData[i][1]=_roadMap.getVehicles().get(i).getStatus();
-			rowData[i][2]=_roadMap.getVehicles().get(i).getItinerary();
-			rowData[i][3]=_roadMap.getVehicles().get(i).getContClass();
-			rowData[i][4]=_roadMap.getVehicles().get(i).getMaxSpeed();
-			rowData[i][5]=_roadMap.getVehicles().get(i).getSpeed();
-			rowData[i][6]=_roadMap.getVehicles().get(i).getTotalCO2();
-			rowData[i][7]=_roadMap.getVehicles().get(i).getTotalTraveledDistance();
+			Vehicle vehicle = _roadMap.getVehicles().get(i);
+			rowData[i][0]=vehicle.getId();
+			rowData[i][1]=vehicle.getStatus();
+			rowData[i][2]=vehicle.getItinerary();
+			rowData[i][3]=vehicle.getContClass();
+			rowData[i][4]=vehicle.getMaxSpeed();
+			rowData[i][5]=vehicle.getSpeed();
+			rowData[i][6]=vehicle.getTotalCO2();
+			rowData[i][7]=vehicle.getTotalTraveledDistance();
 		}
 	}
 

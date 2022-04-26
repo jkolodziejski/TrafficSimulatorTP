@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import extra.controlPanel.ControlPanel;
-import extra.controlPanel.StatusBar;
 import extra.jtable.EventsTableModel;
 import extra.jtable.JunctionsTableModel;
 import extra.jtable.RoadTableModel;

@@ -1,4 +1,4 @@
-package extra.controlPanel;
+package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -22,7 +22,9 @@ import simulator.control.Controller;
 import simulator.factories.NewVehicleEventBuilder;
 import simulator.misc.Pair;
 import simulator.model.NewInterCityRoadEvent;import simulator.model.NewVehicleEvent;
+import simulator.model.RoadMap;
 import simulator.model.SetContClassEvent;
+import simulator.model.TrafficSimulator;
 import simulator.model.Weather;
 
 public class ChangeCO2ClassDialog extends JDialog {
@@ -35,9 +37,12 @@ public class ChangeCO2ClassDialog extends JDialog {
 	protected JComboBox<Integer> co2classlist;
 	protected Controller _ctrl;
 	protected int _status;
+	protected RoadMap _roadMap;
+	protected int _time;
 	
-	public ChangeCO2ClassDialog (Controller ctrl) {
-		
+	public ChangeCO2ClassDialog (Controller ctrl , RoadMap roadMap , int time) {
+		_roadMap = roadMap;
+		_time = time;
 		_ctrl=ctrl;
 		initGui();
 		
@@ -60,9 +65,9 @@ public class ChangeCO2ClassDialog extends JDialog {
 		mainPanel.add(new JLabel("Schedule an event to change the CO2 class of a vehicle after a given number of simulation"
 				+ "ticks from now."),BorderLayout.PAGE_START);
 		
-		vehicles = new String[_ctrl.getTraffic_simulator().get_roadMap().getVehicles().size()];
+		vehicles = new String[_roadMap.getVehicles().size()];
 		for (int i = 0; i < vehicles.length; i++)
-			vehicles[i] = _ctrl.getTraffic_simulator().get_roadMap().getVehicles().get(i).getId();
+			vehicles[i] = _roadMap.getVehicles().get(i).getId();
 		vehiclelist = new JComboBox<String>(vehicles);
 		viewPanel.add(new JLabel(" Vehicle: "));
 		viewPanel.add(vehiclelist);
@@ -100,7 +105,7 @@ public class ChangeCO2ClassDialog extends JDialog {
 				List<Pair<String, Integer>> cs = new ArrayList<>();
 				cs.add(c);
 				
-				SetContClassEvent newEvent = new SetContClassEvent(_ctrl.getTraffic_simulator().get_time()+((int) _ticksSpinner.getValue()), cs); 
+				SetContClassEvent newEvent = new SetContClassEvent(_time+((int) _ticksSpinner.getValue()), cs); 
 				_ctrl.addEvent(newEvent);
 			}
 		});
@@ -114,6 +119,14 @@ public class ChangeCO2ClassDialog extends JDialog {
 		setVisible(false);
 		
 
+	}
+	
+	public void set_roadMap(RoadMap _roadMap) {
+		this._roadMap = _roadMap;
+	}
+	
+	public void set_time(int _time) {
+		this._time = _time;
 	}
 	
 	

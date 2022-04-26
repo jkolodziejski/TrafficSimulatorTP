@@ -59,6 +59,21 @@ public class Controller {
 		p.println("}");
 	}
 	
+	public void run_gui(int n) {
+		
+
+	
+		for(int i=0;i<n-1;i++) {
+			traffic_simulator.advance();
+			
+		}
+		if(n>0) {
+			traffic_simulator.advance();
+			
+		}
+		
+	}
+	
 	public void reset() {
 		traffic_simulator.reset();
 	}
@@ -75,7 +90,5 @@ public class Controller {
 		traffic_simulator.addEvent(e);
 	}
 	
-	public TrafficSimulator getTraffic_simulator() {
-		return traffic_simulator;
-	}
+	
 }

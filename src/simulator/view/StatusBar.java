@@ -1,4 +1,4 @@
-package extra.controlPanel;
+package simulator.view;
 
 
 import java.awt.FlowLayout;

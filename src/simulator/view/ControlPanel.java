@@ -1,4 +1,4 @@
-package extra.controlPanel;
+package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -7,13 +7,16 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
-
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
 import javax.swing.*;
 
+import javafx.scene.control.Button;
 import simulator.control.Controller;
 import simulator.model.Event;
 import simulator.model.RoadMap;
@@ -26,14 +29,18 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	Controller _controller;
 	private JFileChooser fc;
-
-
+	private RoadMap _roadMap;
+	private int _time;
+	private List<JButton> buttons;
 	private boolean _stopped=false;
+	ChangeWeatherDialog changeWeatherDialog;
+	ChangeCO2ClassDialog changeCO2ClassDialog;
 
 	public ControlPanel(Controller controller) {
+		buttons = new ArrayList<>();
 		this._controller = controller;
-		initGUI();
 		controller.addObserver(this);
+		initGUI();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,7 +49,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 
 		this.add(createJToolBar());
-		
+
 		
 		fc = new JFileChooser();
 		// trying to implement the FileChooser
@@ -55,7 +62,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	}
 	
 	
-	public JToolBar createJToolBar() {
+	public JToolBar createJToolBar(){
 		
 		JSpinner _ticksSpinner = new JSpinner(new SpinnerNumberModel(10,1,999999,1));
 		_ticksSpinner.setMaximumSize(new Dimension(80, 30));
@@ -69,12 +76,13 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 
 		JButton load = new JButton();
+		buttons.add(load);
 		load.addActionListener((e)->{
 			try {
 				_controller.reset();
 				loadFile();
 			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(null, "Error controller reset", e1.getMessage(), JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 		});
@@ -86,28 +94,26 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 		// Change Contamination Class
 		JButton co2class = new JButton();
-		
+		buttons.add(co2class);
 		co2class.addActionListener((e)->{
 			
 			 try {
-				 ChangeCO2ClassDialog changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller);
 			       changeCO2ClassDialog.open();
 			    } catch (Exception ex) {
-			        ex.printStackTrace();
+			    	JOptionPane.showMessageDialog(null, "Erros Change CO2 Dialog",ex.getMessage(), JOptionPane.ERROR_MESSAGE);
 			    }
 		});
 		co2class.setIcon(new ImageIcon("resources/icons/co2class.png"));
 		toolBar.add(co2class);
 
 		JButton weather = new JButton();
-		
+		buttons.add(weather);
 		weather.addActionListener((e)->{
 			
 			 try {
-				 ChangeWeatherDialog changeWeatherDialog = new ChangeWeatherDialog(_controller);
 			      changeWeatherDialog.open();
 			    } catch (Exception ex) {
-			        ex.printStackTrace();
+			    	JOptionPane.showMessageDialog(null, "Error Change Weather Dialog", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
 			    }
 		});
 		weather.setIcon(new ImageIcon("resources/icons/weather.png"));
@@ -117,6 +123,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 		// Run
 		JButton run = new JButton();
+		buttons.add(run);
 		run.addActionListener((e)->{
 			_stopped=false;
 			run_sim((int) _ticksSpinner.getValue());
@@ -142,9 +149,11 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		
 		toolBar.add(_ticksSpinner);
 		
+		
 		// Exit
 		
 		JButton exit = new JButton();
+		buttons.add(exit);
 		exit.setAlignmentX(LEFT_ALIGNMENT);
 		exit.addActionListener((e)->{
 			 int result = JOptionPane.showConfirmDialog(null, "Exit?", "Confirm Exit",
@@ -175,53 +184,74 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		System.out.println();
 		if (n > 0 && !_stopped) {
 			try {
-				_controller.run(1,System.out);
+				enableToolBar(false);
+				_controller.run_gui(1);;
 			} catch (Exception e) {
-              // TODO show error message
+				JOptionPane.showMessageDialog(null, "Error run",e.getMessage(), JOptionPane.ERROR_MESSAGE);
 				_stopped = true;
 				return; 
         }
         SwingUtilities.invokeLater(() -> run_sim(n - 1));
 		} else {
-			//enableToolBar(true);
+			enableToolBar(true);
 			_stopped = true;
 		}
 		
 		
 	}
 	
+	
+	private void enableToolBar(Boolean _status) {
+		if(_status!= true) {
+			for(JButton button : buttons) {
+				button.setEnabled(_stopped);
+			}
+		}
+		else {
+			for(JButton button : buttons) {
+				button.setEnabled(!_stopped);
+			}
+		}
+	}
+	
 	private void stop() {
 	      _stopped = true;
+	     
 	}
 	
 	@Override
 	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
+		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
+		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
+		
+		
+		
 	}
 
 	@Override
 	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
+		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
+		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
 	}
 
 	@Override
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		// TODO Auto-generated method stub
-
+		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
+		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
 	}
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
+		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
+		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
 
 	}
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
+		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
+		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
+		 
 	}
 
 	@Override
