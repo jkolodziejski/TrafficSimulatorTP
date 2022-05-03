@@ -1,4 +1,4 @@
-package extra.jtable;
+package simulator.tables;
 
 import java.util.List;
 //import extra.jtable.*;
@@ -18,19 +18,13 @@ public class EventsTableModel extends AbstractTableModel implements TrafficSimOb
 	private List<Event> _events;
 	private String[] _colNames = { "Time", "Description" };
 	private Controller _ctrl ;
-	Object[][] rowData;
-
+	
 	
 
 	public EventsTableModel(Controller ctrl) {
 		_ctrl=ctrl;
 		ctrl.addObserver(this);
-		rowData = new Object[getRowCount()][_colNames.length];
-		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=_events.get(i).getTime();
-			rowData[i][1]=_events.get(i).toString();
-			
-		}
+		
 	}
 
 	public void update() {

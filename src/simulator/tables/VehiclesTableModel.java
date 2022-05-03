@@ -1,4 +1,4 @@
-package extra.jtable;
+package simulator.tables;
 
 import java.util.List;
 //import extra.jtable.*;
@@ -20,24 +20,12 @@ public class VehiclesTableModel extends AbstractTableModel implements TrafficSim
 	private RoadMap _roadMap;
 	private String[] _colNames = { "ID", "Status", "itinerary", "CO2 class", "Max speed" , "Speed" , "total CO2 " , "otal distance" };
 	private Controller _ctrl ;
-	Object[][] rowData;
 
 	
 	public VehiclesTableModel(Controller ctrl) {
 		_ctrl=ctrl;
 		_ctrl.addObserver(this);
-		rowData = new Object[getRowCount()][_colNames.length];
-		for (int i = 0; i < getRowCount(); i++) {
-			Vehicle vehicle = _roadMap.getVehicles().get(i);
-			rowData[i][0]=vehicle.getId();
-			rowData[i][1]=vehicle.getStatus();
-			rowData[i][2]=vehicle.getItinerary();
-			rowData[i][3]=vehicle.getContClass();
-			rowData[i][4]=vehicle.getMaxSpeed();
-			rowData[i][5]=vehicle.getSpeed();
-			rowData[i][6]=vehicle.getTotalCO2();
-			rowData[i][7]=vehicle.getTotalTraveledDistance();
-		}
+	
 	}
 
 	public void update() {

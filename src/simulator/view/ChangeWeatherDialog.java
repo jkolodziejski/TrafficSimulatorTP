@@ -48,6 +48,8 @@ public class ChangeWeatherDialog extends JDialog {
 		
 	}
 	
+	
+	
 	private void initGui() {
 		setTitle("Change CO2 Class");
 		

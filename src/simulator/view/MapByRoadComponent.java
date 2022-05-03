@@ -128,7 +128,7 @@ public class MapByRoadComponent extends JComponent implements TrafficSimObserver
 
 	}
 	
-	private void ChooseWeather(Road r) {
+	private void ChooseCont(Road r) {
 		int C = (int) Math.floor(Math.min((double)r.getTotalCO2()/(1.0 + (double)r.getContLimit()),1.0) / 0.19);
 		
 		switch (C) {
@@ -153,7 +153,7 @@ public class MapByRoadComponent extends JComponent implements TrafficSimObserver
 		}
 	}
 	
-	private void ChooseCont(Road r) {
+	private void ChooseWeather(Road r) {
 		Weather weather = r.getWeather();
 		switch (weather) {
 		case RAINY :

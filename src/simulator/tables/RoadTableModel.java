@@ -1,4 +1,4 @@
-package extra.jtable;
+package simulator.tables;
 
 import java.util.List;
 
@@ -19,22 +19,12 @@ public class RoadTableModel extends AbstractTableModel implements TrafficSimObse
 	private static final long serialVersionUID = 1L;
 	private String[] _colNames = { "ID", "length","weather","Max speed","Current speed","total CO2","CO2 limit" };
 	private Controller _ctrl ;
-	Object[][] rowData;
 	private RoadMap _roadMap;
 
 	public RoadTableModel(Controller ctrl) {
 		_ctrl=ctrl;
 		_ctrl.addObserver(this);
-		rowData = new Object[getRowCount()][_colNames.length];
-		for (int i = 0; i < getRowCount(); i++) {
-			rowData[i][0]=_roadMap.getRoads().get(i).getId();
-			rowData[i][1]=_roadMap.getRoads().get(i).getLength();
-			rowData[i][2]=_roadMap.getRoads().get(i).getWeather();
-			rowData[i][3]=_roadMap.getRoads().get(i).getMaxSpeed();
-			rowData[i][4]=_roadMap.getRoads().get(i).getSpeedLimit();
-			rowData[i][5]=_roadMap.getRoads().get(i).getTotalCO2();
-			rowData[i][6]=_roadMap.getRoads().get(i).getContLimit();
-		}
+
 		
 		// TODO Auto-generated constructor stub
 	}

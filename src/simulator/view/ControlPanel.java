@@ -16,7 +16,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import javafx.scene.control.Button;
+
 import simulator.control.Controller;
 import simulator.model.Event;
 import simulator.model.RoadMap;
@@ -29,12 +29,12 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	Controller _controller;
 	private JFileChooser fc;
-	private RoadMap _roadMap;
-	private int _time;
 	private List<JButton> buttons;
 	private boolean _stopped=false;
 	ChangeWeatherDialog changeWeatherDialog;
 	ChangeCO2ClassDialog changeCO2ClassDialog;
+	private RoadMap _roadMap;
+	private int _time;
 
 	public ControlPanel(Controller controller) {
 		buttons = new ArrayList<>();
@@ -98,6 +98,9 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		co2class.addActionListener((e)->{
 			
 			 try {
+				 	
+				 	changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller,_roadMap, _time);
+				 	
 			       changeCO2ClassDialog.open();
 			    } catch (Exception ex) {
 			    	JOptionPane.showMessageDialog(null, "Erros Change CO2 Dialog",ex.getMessage(), JOptionPane.ERROR_MESSAGE);
@@ -111,6 +114,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		weather.addActionListener((e)->{
 			
 			 try {
+				 changeWeatherDialog = new ChangeWeatherDialog(_controller, _roadMap, _time);
+				
 			      changeWeatherDialog.open();
 			    } catch (Exception ex) {
 			    	JOptionPane.showMessageDialog(null, "Error Change Weather Dialog", ex.getMessage(), JOptionPane.ERROR_MESSAGE);
@@ -204,53 +209,58 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 	private void enableToolBar(Boolean _status) {
 		if(_status!= true) {
 			for(JButton button : buttons) {
-				button.setEnabled(_stopped);
+				button.setEnabled(false);
 			}
 		}
 		else {
 			for(JButton button : buttons) {
-				button.setEnabled(!_stopped);
+				button.setEnabled(true);
 			}
 		}
 	}
 	
 	private void stop() {
+		enableToolBar(false);
 	      _stopped = true;
+	      
 	     
 	}
 	
 	@Override
 	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
-		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
-		
-		
+		_time=time;
+		_roadMap = map;
 		
 	}
 
 	@Override
 	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
-		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
+		_time=time;
+		_roadMap = map;
+		
+
 	}
 
 	@Override
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
-		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
+		_time=time;
+		_roadMap = map;
+		
 	}
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
-		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
+		_time=time;
+		_roadMap = map;
+		
 
 	}
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
-		 changeWeatherDialog = new ChangeWeatherDialog(_controller, map, time);
-		 changeCO2ClassDialog = new ChangeCO2ClassDialog(_controller, map, time);
+		_time=time;
+		_roadMap = map;
+		
 		 
 	}
 

@@ -6,11 +6,11 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-import extra.jtable.EventsTableModel;
-import extra.jtable.JunctionsTableModel;
-import extra.jtable.RoadTableModel;
-import extra.jtable.VehiclesTableModel;
 import simulator.control.Controller;
+import simulator.tables.EventsTableModel;
+import simulator.tables.JunctionsTableModel;
+import simulator.tables.RoadTableModel;
+import simulator.tables.VehiclesTableModel;
 
 
 public class MainWindow extends JFrame  {
@@ -54,11 +54,11 @@ public class MainWindow extends JFrame  {
 		eventsView.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(vehiclesView);
 		
-		JPanel roadsView = createViewPanel(new JTable(new RoadTableModel(_ctrl)), "Vehicles");
+		JPanel roadsView = createViewPanel(new JTable(new RoadTableModel(_ctrl)), "Roads");
 		roadsView.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(roadsView);
 		
-		JPanel junctionsView = createViewPanel(new JTable(new JunctionsTableModel(_ctrl)), "Vehicles");
+		JPanel junctionsView = createViewPanel(new JTable(new JunctionsTableModel(_ctrl)), "Junctions");
 		junctionsView.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(junctionsView);
 
@@ -81,9 +81,8 @@ public class MainWindow extends JFrame  {
 		JPanel p = new JPanel(new BorderLayout());
 		
 		Border blackline = BorderFactory.createLineBorder(Color.black,2);
-		TitledBorder titled = BorderFactory.createTitledBorder(blackline, "title");
+		TitledBorder titled = BorderFactory.createTitledBorder(blackline, title);
 		p.setBorder(titled);
-		// TODO add a framed border to p with title
 		p.add(new JScrollPane(c));
 		return p;
 	}

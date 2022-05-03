@@ -1,4 +1,4 @@
-package extra.jtable;
+package simulator.tables;
 
 import java.util.List;
 
@@ -20,28 +20,10 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 	private RoadMap _roadMap;
 	private Controller _ctrl;
 	private String[] _colNames = { "ID" , "Green" , "Queues"};
-	Object[][] rowData;
 
 	public JunctionsTableModel(Controller ctrl) {
 		_ctrl=ctrl;
 		_ctrl.addObserver(this);
-		rowData = new Object[getRowCount()][_colNames.length];
-		for (int i = 0; i < getRowCount(); i++) {
-			Junction junction = _roadMap.getJunctions().get(i);
-			rowData[i][0]=junction.getId();
-			int which_green = junction.getGreenLightIndex();
-			if(which_green==-1) {
-				rowData[i][1]= "NONE";
-			}
-			else
-			{
-				rowData[i][1]=junction.getInRoads().get(which_green).getId();
-				}
-			
-			rowData[i][2]=junction.getQueues();
-			
-		}
-		
 	}
 	
 
